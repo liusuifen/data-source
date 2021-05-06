@@ -18,7 +18,7 @@ public class ParmaryUserServiceImpl implements ParmaryUserService {
     @Autowired
     PrimaryUserMapper primaryUserMapper;
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
+    @DataSourceSign(ContextConst.DataSourceType.SUB)
     @Override
     public User sellPrimary() {
         return primaryUserMapper.selectById(1);

@@ -3,6 +3,9 @@ package com.example.mysqloracle.datasource;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.example.mysqloracle.common.ContextConst;
 import com.example.mysqloracle.common.DynamicDataSource;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mapstruct.Qualifier;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +40,6 @@ public class MutiplyDataSource {
         DynamicDataSource dynamicDataSource = new DynamicDataSource();
         //配置默认数据源
         dynamicDataSource.setDefaultTargetDataSource(primaryDataSource());
-
         //配置多数据源
         HashMap<Object, Object> dataSourceMap = new HashMap();
         dataSourceMap.put(ContextConst.DataSourceType.PRIMARY.name(),primaryDataSource());
@@ -54,6 +56,8 @@ public class MutiplyDataSource {
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dynamicDataSource());
     }
+
+
 
 
 }

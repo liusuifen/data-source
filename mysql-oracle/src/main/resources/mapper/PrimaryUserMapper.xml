@@ -3,6 +3,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.mysqloracle.dao.PrimaryUserMapper">
 
+    <resultMap id="" type="">
+        <id column="id" property="id" />
+        <id column="username" property="username" />
+        <id column="password" property="password" />
+        <id column="role_id" property="roleId" />
+    </resultMap>
+
     <select id="selectById" parameterType="Integer" resultType="User">
         select * from acl_user where id =#{id}
     </select>

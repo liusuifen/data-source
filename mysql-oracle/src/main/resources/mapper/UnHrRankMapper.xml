@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.un.test.mapper.UnHrRankMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.un.test.entity.UnHrRank">
+        <id column="id" property="id" />
+        <result column="channel_id" property="channelId" />
+        <result column="rank_name" property="rankName" />
+        <result column="state" property="state" />
+        <result column="view" property="view" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="modify_by" property="modifyBy" />
+        <result column="modify_time" property="modifyTime" />
+        <result column="rank_id" property="rankId" />
+        <result column="delete_time" property="deleteTime" />
+        <result column="default_rank" property="defaultRank" />
+        <result column="agent_sort" property="agentSort" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, channel_id, rank_name, state, view, create_by, create_time, modify_by, modify_time, rank_id, delete_time, default_rank, agent_sort
+    </sql>
+
+</mapper>

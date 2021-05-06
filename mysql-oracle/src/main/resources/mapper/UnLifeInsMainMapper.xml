@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mysqloracle.dao.UnLifeInsMainMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.mysqloracle.entity.UnLifeInsMain">
+        <id column="id" property="id" />
+        <result column="channel_id" property="channelId" />
+        <result column="order_no" property="orderNo" />
+        <result column="policy_no" property="policyNo" />
+        <result column="policy_sn" property="policySn" />
+        <result column="uw_medical_id" property="uwMedicalId" />
+        <result column="supplier_id" property="supplierId" />
+        <result column="sales_channel" property="salesChannel" />
+        <result column="sales_dept" property="salesDept" />
+        <result column="ins_area" property="insArea" />
+        <result column="user_id" property="userId" />
+        <result column="rank_id" property="rankId" />
+        <result column="holder_name" property="holderName" />
+        <result column="holder_gender" property="holderGender" />
+        <result column="holder_birthday" property="holderBirthday" />
+        <result column="holder_nation" property="holderNation" />
+        <result column="holder_ID_type" property="holderIdType" />
+        <result column="holder_ID_no" property="holderIdNo" />
+        <result column="holder_ID_expire_end" property="holderIdExpireEnd" />
+        <result column="holder_marriage" property="holderMarriage" />
+        <result column="holder_height" property="holderHeight" />
+        <result column="holder_weight" property="holderWeight" />
+        <result column="holder_salary" property="holderSalary" />
+        <result column="holder_job_code" property="holderJobCode" />
+        <result column="holder_company" property="holderCompany" />
+        <result column="holder_position" property="holderPosition" />
+        <result column="holder_company_address" property="holderCompanyAddress" />
+        <result column="holder_salary_avg" property="holderSalaryAvg" />
+        <result column="holder_salary_from" property="holderSalaryFrom" />
+        <result column="holder_home_province" property="holderHomeProvince" />
+        <result column="holder_home_city" property="holderHomeCity" />
+        <result column="holder_home_district" property="holderHomeDistrict" />
+        <result column="holder_home_address" property="holderHomeAddress" />
+        <result column="holder_home_zip" property="holderHomeZip" />
+        <result column="holder_contact_province" property="holderContactProvince" />
+        <result column="holder_contact_city" property="holderContactCity" />
+        <result column="holder_contact_district" property="holderContactDistrict" />
+        <result column="holder_contact_address" property="holderContactAddress" />
+        <result column="holder_contact_zip" property="holderContactZip" />
+        <result column="holder_phone" property="holderPhone" />
+        <result column="holder_mobile" property="holderMobile" />
+        <result column="holder_office_phone" property="holderOfficePhone" />
+        <result column="holder_is_sms" property="holderIsSms" />
+        <result column="holder_email" property="holderEmail" />
+        <result column="holder_has_SSID" property="holderHasSsid" />
+        <result column="holder_education" property="holderEducation" />
+        <result column="bank_area" property="bankArea" />
+        <result column="bank_name" property="bankName" />
+        <result column="bank_type" property="bankType" />
+        <result column="bank_no" property="bankNo" />
+        <result column="bank_holder" property="bankHolder" />
+        <result column="val_date" property="valDate" />
+        <result column="grace_end_date" property="graceEndDate" />
+        <result column="total" property="total" />
+        <result column="progress" property="progress" />
+        <result column="progress_time" property="progressTime" />
+        <result column="is_first" property="isFirst" />
+        <result column="is_legal_benefic" property="isLegalBenefic" />
+        <result column="extend_items" property="extendItems" />
+        <result column="img_json" property="imgJson" />
+        <result column="state" property="state" />
+        <result column="pay_status" property="payStatus" />
+        <result column="is_temp" property="isTemp" />
+        <result column="remark" property="remark" />
+        <result column="is_property" property="isProperty" />
+        <result column="create_by" property="createBy" />
+        <result column="create_time" property="createTime" />
+        <result column="modify_by" property="modifyBy" />
+        <result column="modify_time" property="modifyTime" />
+        <result column="war_id" property="warId" />
+        <result column="delete_time" property="deleteTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, channel_id, order_no, policy_no, policy_sn, uw_medical_id, supplier_id, sales_channel, sales_dept, ins_area, user_id, rank_id, holder_name, holder_gender, holder_birthday, holder_nation, holder_ID_type, holder_ID_no, holder_ID_expire_end, holder_marriage, holder_height, holder_weight, holder_salary, holder_job_code, holder_company, holder_position, holder_company_address, holder_salary_avg, holder_salary_from, holder_home_province, holder_home_city, holder_home_district, holder_home_address, holder_home_zip, holder_contact_province, holder_contact_city, holder_contact_district, holder_contact_address, holder_contact_zip, holder_phone, holder_mobile, holder_office_phone, holder_is_sms, holder_email, holder_has_SSID, holder_education, bank_area, bank_name, bank_type, bank_no, bank_holder, val_date, grace_end_date, total, progress, progress_time, is_first, is_legal_benefic, extend_items, img_json, state, pay_status, is_temp, remark, is_property, create_by, create_time, modify_by, modify_time, war_id, delete_time
+    </sql>
+
+    <select id="getAll" resultType="com.example.mysqloracle.entity.UnLifeInsMain">
+        select
+        <include refid="Base_Column_List"></include>
+        from un_life_ins_main where id=1
+    </select>
+</mapper>
