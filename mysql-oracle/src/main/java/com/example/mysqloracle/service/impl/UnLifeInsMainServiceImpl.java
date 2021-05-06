@@ -7,7 +7,6 @@ import com.example.mysqloracle.common.DataSourceSign;
 import com.example.mysqloracle.dao.LifePolicyMapper;
 import com.example.mysqloracle.dao.UnHrRankMapper;
 import com.example.mysqloracle.dao.UnLifeInsMainMapper;
-import com.example.mysqloracle.datasource.DataSourceContextHolder;
 import com.example.mysqloracle.entity.LifePolicy;
 import com.example.mysqloracle.entity.UnLifeInsMain;
 import com.example.mysqloracle.service.UnLifeInsMainService;
@@ -15,8 +14,9 @@ import com.example.mysqloracle.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -63,12 +63,18 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
             policy.setOrderNo(unLifeInsMain.getOrderNo());
             policy.setPolicyNo(unLifeInsMain.getPolicyNo());
             policy.setPolicySn(unLifeInsMain.getPolicySn());
+
             if(!"0".equals(unLifeInsMain.getRankId())){
                 policy.setSalesUserRankId(Long.valueOf(unLifeInsMain.getRankId()));
             }else{
 
             }
+
+            policy.setDateStart(LocalDate.parse(unLifeInsMain.getValDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             policy.setIsLegalBeneficiary(unLifeInsMain.getIsLegalBenefic());
+            policy.setFee(unLifeInsMain.getTotal());
+            policy.setStatus(unLifeInsMain.getState());//枚举类型不一致
+            policy.setPayStatus(unLifeInsMain.getPayStatus());//枚举类型不一致
 
         }else{
 
@@ -76,10 +82,10 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
         }
     }
 
-    @DataSourceSign(ContextConst.DataSourceType.SUB)
-    public String oldRankId(String rankId){
-        unHrRankMapper.selectById()
-    }
+//    @DataSourceSign(ContextConst.DataSourceType.SUB)
+//    public String oldRankId(String rankId){
+//        unHrRankMapper.selectById()
+//    }
 
 
 }
