@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mysqloracle.dao.news.LifePolicyStatusMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.mysqloracle.entity.news.LifePolicyStatus">
+        <id column="id" property="id" />
+        <result column="life_policy_id" property="lifePolicyId" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="date" property="date" />
+        <result column="created_at" property="createdAt" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_user_id" property="updateUserId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, life_policy_id, status, remark, date, created_at, update_user, update_user_id
+    </sql>
+    
+    <insert id="insertLifePolicyStatus" parameterType="com.example.mysqloracle.entity.news.LifePolicyStatus">
+        insert into  life_policy_status (
+                    <include refid="Base_Column_List"></include>
+
+            values (#{id},#{lifePolicyId},#{status},#{remark},#{date,jdbcType=LocalDate},#{createdAt},#{updateUser},#{updateUserId});
+    </insert>
+
+</mapper>

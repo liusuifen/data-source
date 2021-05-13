@@ -33,6 +33,12 @@ public class MutiplyDataSource {
         return new DruidDataSource();
     }
 
+    @Bean(name = "dataSourceCommon")
+    @ConfigurationProperties(prefix = "spring.datasource.test3")
+    public DataSource commonSource(){
+        return new DruidDataSource();
+    }
+
 
     @Primary
     @Bean(name = "dynamicDataSource")
@@ -44,6 +50,7 @@ public class MutiplyDataSource {
         HashMap<Object, Object> dataSourceMap = new HashMap();
         dataSourceMap.put(ContextConst.DataSourceType.PRIMARY.name(),primaryDataSource());
         dataSourceMap.put(ContextConst.DataSourceType.SUB.name(),localDataSource());
+        dataSourceMap.put(ContextConst.DataSourceType.COMMON.name(),commonSource());
         dynamicDataSource.setTargetDataSources(dataSourceMap);
         return dynamicDataSource;
     }

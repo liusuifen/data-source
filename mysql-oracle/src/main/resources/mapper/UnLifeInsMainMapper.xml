@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.mysqloracle.dao.UnLifeInsMainMapper">
+<mapper namespace="com.example.mysqloracle.dao.old.UnLifeInsMainMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.example.mysqloracle.entity.UnLifeInsMain">
+    <resultMap id="BaseResultMap" type="com.example.mysqloracle.entity.old.UnLifeInsMain">
         <id column="id" property="id" />
         <result column="channel_id" property="channelId" />
         <result column="order_no" property="orderNo" />
@@ -82,7 +82,7 @@
         id, channel_id, order_no, policy_no, policy_sn, uw_medical_id, supplier_id, sales_channel, sales_dept, ins_area, user_id, rank_id, holder_name, holder_gender, holder_birthday, holder_nation, holder_ID_type, holder_ID_no, holder_ID_expire_end, holder_marriage, holder_height, holder_weight, holder_salary, holder_job_code, holder_company, holder_position, holder_company_address, holder_salary_avg, holder_salary_from, holder_home_province, holder_home_city, holder_home_district, holder_home_address, holder_home_zip, holder_contact_province, holder_contact_city, holder_contact_district, holder_contact_address, holder_contact_zip, holder_phone, holder_mobile, holder_office_phone, holder_is_sms, holder_email, holder_has_SSID, holder_education, bank_area, bank_name, bank_type, bank_no, bank_holder, val_date, grace_end_date, total, progress, progress_time, is_first, is_legal_benefic, extend_items, img_json, state, pay_status, is_temp, remark, is_property, create_by, create_time, modify_by, modify_time, war_id, delete_time
     </sql>
 
-    <select id="getAll" resultType="com.example.mysqloracle.entity.UnLifeInsMain">
+    <select id="getAll" resultType="com.example.mysqloracle.entity.old.UnLifeInsMain">
         select
         <include refid="Base_Column_List"></include>
         from un_life_ins_main where id=1

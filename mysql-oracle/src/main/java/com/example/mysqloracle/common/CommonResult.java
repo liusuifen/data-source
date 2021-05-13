@@ -2,6 +2,7 @@ package com.example.mysqloracle.common;
 
 import com.example.mysqloracle.enums.ResultEnum;
 
+
 public class CommonResult<T> {
     private T data;
     private String message;

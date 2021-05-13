@@ -2,15 +2,13 @@ package com.example.mysqloracle.controller;
 
 
 import com.example.mysqloracle.common.CommonResult;
-import com.example.mysqloracle.entity.UnLifeInsMain;
-import com.example.mysqloracle.service.UnLifeInsMainService;
+import com.example.mysqloracle.entity.old.UnLifeInsMain;
+import com.example.mysqloracle.param.Param;
+import com.example.mysqloracle.service.old.UnLifeInsMainService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,17 +29,36 @@ public class UnLifeInsMainController {
     private UnLifeInsMainService unLifeInsMainService;
 
     /**
-     *
+     *保单life_policy主表同步
      */
-    @ApiOperation("")
-    @GetMapping(value = "/move")
-    @ResponseBody
-    public CommonResult move()  {
-        log.info("unLifeInsMain----------col");
-        List<UnLifeInsMain> all = unLifeInsMainService.getAll();
-
-        return new CommonResult(all);
+    @ApiOperation("保单迁移")
+    @PostMapping(value = "/move")
+    public CommonResult move(@RequestBody Param param)  {
+        log.info("保单迁移请求入参{}",param);
+        return unLifeInsMainService.getAll(param);
     }
+
+    /**
+     *保单life_policy主表同步
+     */
+    @ApiOperation("迁移失败保单重新迁移")
+    @PostMapping(value = "/moveAgain")
+    public CommonResult moveAgain(@RequestBody Param param)  {
+        log.info("保单迁移请求入参{}",param);
+        return unLifeInsMainService.getFail(param);
+    }
+
+
+    /**
+     *获取税务类型
+     */
+    @ApiOperation("获取税务类型")
+    @PostMapping(value = "/getTaxTypeCode")
+    public CommonResult getTaxTypeCode()  {
+        return unLifeInsMainService.getTaxType();
+    }
+
+
 
 }
 
