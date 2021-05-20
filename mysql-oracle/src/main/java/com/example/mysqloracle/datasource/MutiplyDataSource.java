@@ -39,6 +39,12 @@ public class MutiplyDataSource {
         return new DruidDataSource();
     }
 
+    @Bean(name = "dataSourceAdmin")
+    @ConfigurationProperties(prefix = "spring.datasource.test4")
+    public DataSource adminSource(){
+        return new DruidDataSource();
+    }
+
 
     @Primary
     @Bean(name = "dynamicDataSource")
@@ -51,6 +57,7 @@ public class MutiplyDataSource {
         dataSourceMap.put(ContextConst.DataSourceType.PRIMARY.name(),primaryDataSource());
         dataSourceMap.put(ContextConst.DataSourceType.SUB.name(),localDataSource());
         dataSourceMap.put(ContextConst.DataSourceType.COMMON.name(),commonSource());
+        dataSourceMap.put(ContextConst.DataSourceType.ADMIN.name(),adminSource());
         dynamicDataSource.setTargetDataSources(dataSourceMap);
         return dynamicDataSource;
     }

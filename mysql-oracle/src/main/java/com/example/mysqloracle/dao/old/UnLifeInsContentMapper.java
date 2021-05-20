@@ -26,7 +26,8 @@ public interface UnLifeInsContentMapper extends BaseMapper<UnLifeInsContent> {
             "additional_fee as additionalFee, quantity, is_main as isMain, duty_option as dutyOption, free_option as freeOption, " +
             "loss_rate as lossRate, extend_items as extendItems, state, create_by as createBy, create_time as createTime, " +
             "modify_by as modifyBy, modify_time as modifyTime, delete_time as deleteTime from un_life_ins_content " +
-            "where policy_id=#{policyId} ")
+            "where policy_id=#{policyId} " +
+            "and delete_time is null")
     List<UnLifeInsContent> getByPolicyId(@Param("policyId") Integer policyId);
 
 

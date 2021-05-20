@@ -27,7 +27,8 @@ public interface UnLifeInsBeneficiaryMapper extends BaseMapper<UnLifeInsBenefici
             "death_get_type as deathGetType, death_get_rate as deathGetRate, death_get_ratio as deathGetRatio, death_get_start as deathGetStart, " +
             "death_get_end as deathGetEnd, death_rate as deathRate, state, create_by as createBy, create_time as createTime, modify_by as modifyBy, " +
             "modify_time as modifyTime, bene_id as beneId, delete_time as deleteTime " +
-            " from un_life_ins_beneficiary where policy_id=#{policyId}")
+            " from un_life_ins_beneficiary where policy_id=#{policyId} " +
+            "and delete_time is null")
     List<UnLifeInsBeneficiary> getByPolicyId(@Param("policyId") Integer policyId);
 
 

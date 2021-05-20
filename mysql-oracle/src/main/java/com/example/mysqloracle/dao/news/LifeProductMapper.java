@@ -35,5 +35,17 @@ public interface LifeProductMapper extends BaseMapper<LifeProduct> {
     Long getIdByCode(@Param("code") String Code);
 
 
+    @Select("select category_id from life_product where `code` = #{code} and is_deleted=0;")
+    Integer getCategoryByCode(@Param("code") String Code);
+
+
+    @Select("select code from life_product where `id` = #{id} and is_deleted=0;")
+    String getCodeById(@Param("id") Long id);
+
+
+
+
+
+
 
 }

@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * <p>
  * 寿险保单-保单进度变更表 Mapper 接口
@@ -23,5 +25,16 @@ public interface LifePolicyProgressMapper extends BaseMapper<LifePolicyProgress>
 
     @Select("select count(*) from life_policy_progress where id=#{id}")
     Integer getCountById(@Param("id") Long id);
+
+    @Select("select id, life_policy_id as lifePolicyId, progress, result, date, file, remark, update_user as updateUser, " +
+            "created_at as createdAt, update_user_id as updateUserId " +
+            "from life_policy_progress where life_policy_id=#{lifePolicyId}")
+    List<LifePolicyProgress> selectByPolicyId(@Param("lifePolicyId") Long lifePolicyId);
+
+
+    @Select("select id, life_policy_id as lifePolicyId, progress, result, date, file, remark, update_user as updateUser, " +
+            "created_at as createdAt, update_user_id as updateUserId " +
+            "from life_policy_progress where life_policy_id=#{lifePolicyId} and progress=#{progress}")
+    LifePolicyProgress selectByPolicyIdAndProcess(@Param("lifePolicyId") Long lifePolicyId,@Param("progress") Integer progress);
 
 }

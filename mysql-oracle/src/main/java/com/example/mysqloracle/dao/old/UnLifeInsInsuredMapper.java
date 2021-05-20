@@ -33,7 +33,8 @@ public interface UnLifeInsInsuredMapper extends BaseMapper<UnLifeInsInsured> {
             "insured_email as insuredEmail, has_insured_SSID as hasInsuredSsid, insured_education as insuredEducation, rel_holder_insured as relHolderInsured, " +
             "rel_insured_holder as relInsuredHolder, extend_items as extendItems, state, create_by as createBy, create_time as createTime, modify_by as modifyBy, modify_time as modifyTime, " +
             "assu_id as assuId, delete_time as deleteTime from un_life_ins_insured " +
-            "where policy_id=#{policyId}")
+            "where policy_id=#{policyId} " +
+            "and delete_time is null")
     List<UnLifeInsInsured> getByPolicyId(@Param("policyId") Integer policyId);
 
 }

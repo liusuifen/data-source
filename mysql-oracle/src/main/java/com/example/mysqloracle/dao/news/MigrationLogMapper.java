@@ -22,13 +22,55 @@ import java.util.List;
 @Mapper
 public interface MigrationLogMapper extends BaseMapper<MigrationLog> {
 
-
-    @Select("select id, old_id as oldId, status, type, created_at as createdAt, updated_at as updatedAt from migration_log where old_id=#{oldId}")
+    /**
+     * 根据id查询该数据是否存在迁移记录
+     * @param oldId
+     * @return
+     */
+    @Select("select id, old_id as oldId, status, type, created_at as createdAt, updated_at as updatedAt from migration_log where old_id=#{oldId} limit 1")
     MigrationLog getByOldId(@Param("oldId") Long oldId);
 
-    @Select("select old_id from migration_log where  source_partner_id=#{sourcePartnerId} and status=2")
+
+    /**
+     * 根据id查询该数据是否存在迁移记录
+     * @param oldId
+     * @return
+     */
+    @Select("select id, old_id as oldId, status, type, created_at as createdAt, updated_at as updatedAt from migration_log where old_id=#{oldId} and type=3 limit 1")
+    MigrationLog getByOldIdAndType(@Param("oldId") Long oldId);
+
+    /**
+     * 获取迁移失败的保单id
+     * @param sourcePartnerId
+     * @return
+     */
+    @Select("select old_id from migration_log where  source_partner_id=#{sourcePartnerId} and status=2 and type=1")
     List<Integer> getErrorPolicy(@Param("sourcePartnerId") Long sourcePartnerId);
 
+    /**
+     * 获取全部迁移成功的保单id
+     */
+    @Select("select old_id from migration_log where  source_partner_id=#{sourcePartnerId} and status=1 and type=1")
+    List<Integer> getSuccessPolicy(@Param("sourcePartnerId") Long sourcePartnerId);
+
+
+    /**
+     * 获取全部迁移成功的保单id
+     */
+    @Select("select old_id from migration_log where  source_partner_id=#{sourcePartnerId} and status=2 and type=3")
+    List<Integer> getErrorSync(@Param("sourcePartnerId") Long sourcePartnerId);
+
+    /**
+     * 获取迁移失败的产品id
+     * @param sourcePartnerId
+     * @return
+     */
+    @Select("select old_id from migration_log where  source_partner_id=#{sourcePartnerId} and status=2 and type=2")
+    List<Long> getErrorProduct(@Param("sourcePartnerId") Long sourcePartnerId);
+
+    /**
+     * 更新迁移状态
+     */
     @Update("update migration_log set updated_at =#{updatedAt},status=#{status} where old_id=#{oldId}")
     Integer updateAt(@Param("updatedAt")LocalDateTime updatedAt,@Param("status")Integer status,@Param("oldId") Long oldId);
 

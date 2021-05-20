@@ -7,6 +7,12 @@ public class Param {
 
     private Integer channelId;
 
+    private String startDate;
+
+    private String endDate;
+
+    private String url;
+
 
 
 }

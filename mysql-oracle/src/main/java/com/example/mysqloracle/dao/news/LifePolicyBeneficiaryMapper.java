@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * <p>
  * 寿险保单受益人表 Mapper 接口
@@ -25,5 +27,12 @@ public interface LifePolicyBeneficiaryMapper extends BaseMapper<LifePolicyBenefi
 
     @Select("select count(*) from life_policy_beneficiary where id=#{id}")
     Integer getCountById(@Param("id") Long id);
+
+
+    @Select("select id, life_policy_id as lifePolicyId, name, gender, birthday, id_type as idType, id_no as idNo, " +
+            "id_concat as idConcat, id_expired_date as idExpiredDate, email, mobile, relation, relation_name as relationName, " +
+            "`rank`, ratio, province, city, district, address, type, is_deleted as isDeleted, height, weight, nationality, zip " +
+            "from life_policy_beneficiary where life_policy_id=#{lifePolicyId}")
+    List<LifePolicyBeneficiary> selectByPolicyId(@Param("lifePolicyId") Long lifePolicyId);
 
 }

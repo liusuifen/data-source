@@ -2,6 +2,7 @@ package com.example.mysqloracle.dao.old;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.example.mysqloracle.entity.old.UnLifeInsMain;
+import io.swagger.models.auth.In;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -40,8 +41,10 @@ public interface UnLifeInsMainMapper extends BaseMapper<UnLifeInsMain> {
             "from un_life_ins_main where 1=1 " +
             "and channel_id=#{channelId} " +
             "and is_first=1 " +
-            "and delete_time is null")
-    List<UnLifeInsMain> getAll(@Param("channelId") Integer channelId);
+            "and delete_time is null " +
+            "and create_time>=#{startDate} " +
+            "and create_time<#{endDate}")
+    List<UnLifeInsMain> getAll(@Param("channelId") Integer channelId, @Param("startDate") Integer startDate, @Param("endDate") Integer endDate);
 
 
 

@@ -259,5 +259,86 @@ public class DateUtil {
         return localDateTime;
     }
 
+    public static Integer strToInteger(String str){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        int date = 0;
+        try {
+            Date dateStart = format.parse(str);
+            date = (int) (dateStart.getTime() / 1000);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+    /**
+     * 转换字符串成date
+     *
+     * @param date
+     * @return
+     */
+    public static Date parseDate(String date) {
+        if (date == null) return null;
+        if (date.matches("^\\d+$")) {
+            try {
+                return new Date(Long.valueOf(date));
+            } catch (Throwable e) {
+            }
+        }
+        String[] pattern = new String[]{
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy/MM/dd HH:mm:ss",
+                "yyyyMMddHHmmss",
+                "yyyy-MM-dd",
+                "yyyy/MM/dd",
+                "yyyyMMdd"
+        };
+        Date cDate = null;
+        for (int i = 0; i < pattern.length; i++) {
+            cDate = parse(date, pattern[i]);
+            if (cDate != null) {
+                return cDate;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 使用用户格式提取字符串日期
+     *
+     * @param strDate 日期字符串
+     * @param pattern 日期格式
+     * @return {@link Date}
+     */
+    public static Date parse(String strDate, String pattern) {
+        SimpleDateFormat df = new SimpleDateFormat(pattern);
+        try {
+            return df.parse(strDate);
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        String startDate = "2020-09-03";
+        String endDate = "2021-05-12";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        int startDay = 0;
+        int endDay = 0;
+        try {
+            Date dateStart = format.parse(startDate);
+            Date datEnd = format.parse(endDate);
+
+            startDay = (int) (dateStart.getTime() / 1000);
+            endDay = (int) (datEnd.getTime() / 1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.err.println(startDay);
+        System.err.println(endDay);
+
+    }
+
 
 }

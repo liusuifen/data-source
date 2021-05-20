@@ -32,7 +32,7 @@ public interface BasicEnumService extends IService<BasicEnum> {
 
 
     /**
-     * 证件类型
+     * 婚姻状态
      * @return
      */
     CommonResult getHolderMarriage();

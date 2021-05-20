@@ -50,6 +50,21 @@ public class UnLifeInsMainController {
 
 
     /**
+     *根据保单数据生成投保人、被保人的客户数据
+     */
+    @ApiOperation("根据保单数据生成投保人、被保人的客户数据")
+    @PostMapping(value = "/createCustomer")
+    public CommonResult createCustomer(@RequestBody Param param)  {
+        log.info("保单迁移请求入参{}",param);
+        return unLifeInsMainService.createCustomer(param);
+    }
+
+
+
+
+
+
+    /**
      *获取税务类型
      */
     @ApiOperation("获取税务类型")
