@@ -320,7 +320,8 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
         if (ReflectUtil.isNull(lifePolicy)) {
             LifePolicy policy = new LifePolicy();
             policy.setId(oldId);
-            policy.setSourcePartnerId(PartnerEnum.getPartnerIdByChannelId(unLifeInsMain.getChannelId()));
+//            policy.setSourcePartnerId(PartnerEnum.getPartnerIdByChannelId(unLifeInsMain.getChannelId()));
+            policy.setSourcePartnerId(0L);
             policy.setOrderNo(unLifeInsMain.getOrderNo());
             policy.setPolicyNo(unLifeInsMain.getPolicyNo());
             policy.setPolicySn(unLifeInsMain.getPolicySn());

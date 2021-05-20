@@ -4,8 +4,16 @@ package com.example.mysqloracle.enums;
  * 渠道对应的合作方关系
  */
 public enum PartnerEnum {
-
-    channelId_佳兆业(22, 25670487065493504L);
+    /**
+     * 佳兆业22:  25884107091214336
+     * 众康27:  25895773975609344
+     * 汇盟 2: 25670487107436544
+     * 大同25: 25891271281213440
+     * 产商31: 25899747575332864
+     *
+     */
+    //佳兆业
+    channelId_佳兆业(22, 25884107053465600L);
 
     private Integer channelId;
     private Long partnerId;
