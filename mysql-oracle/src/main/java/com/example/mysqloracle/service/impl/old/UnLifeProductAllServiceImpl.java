@@ -27,7 +27,7 @@ public class UnLifeProductAllServiceImpl extends ServiceImpl<UnLifeProductAllMap
     public String getCodeById(Integer id) {
         String code="";
         if(id!=0){
-            code = unLifeProductAllMapper.getCOdeById(id);
+            code = unLifeProductAllMapper.getCodeById(id);
         }
         return code;
     }

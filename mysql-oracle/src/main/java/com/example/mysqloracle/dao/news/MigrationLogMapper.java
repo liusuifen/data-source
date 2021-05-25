@@ -27,8 +27,8 @@ public interface MigrationLogMapper extends BaseMapper<MigrationLog> {
      * @param oldId
      * @return
      */
-    @Select("select id, old_id as oldId, status, type, created_at as createdAt, updated_at as updatedAt from migration_log where old_id=#{oldId} limit 1")
-    MigrationLog getByOldId(@Param("oldId") Long oldId);
+    @Select("select id, old_id as oldId, status, type, created_at as createdAt, updated_at as updatedAt from migration_log where old_id=#{oldId} and type=#{type} limit 1")
+    MigrationLog getByOldId(@Param("oldId") Long oldId,@Param("type") Integer type);
 
 
     /**

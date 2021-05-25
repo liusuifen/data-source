@@ -10,6 +10,8 @@ import com.example.mysqloracle.dao.old.UnLifeProductMapper;
 import com.example.mysqloracle.datasource.DataSourceContextHolder;
 import com.example.mysqloracle.entity.news.*;
 import com.example.mysqloracle.enums.BooleanEnum;
+import com.example.mysqloracle.enums.MigrationStatusEnum;
+import com.example.mysqloracle.enums.MigrationTypeEnum;
 import com.example.mysqloracle.enums.ResultEnum;
 import com.example.mysqloracle.exception.BusinessException;
 import com.example.mysqloracle.param.Param;
@@ -56,15 +58,10 @@ public class DataApiService {
     @Autowired
     private LifeProductTagMapMapper lifeProductTagMapMapper;
 
-    private static Integer migration_status_sucessful = 1;//迁移成功
 
-    private static Integer migration_status_already = 3;//早已迁移过
 
-    private static Integer migration_status_error = 2;//迁移失败
 
-    private static Integer migration_type_product = 2;//1:产品
 
-    private static Integer migration_type_tag = 4;//1:产品
 
 
 
@@ -92,7 +89,7 @@ public class DataApiService {
                     log.info("保联后台产品code：{}不存在",code);
                 }
             } catch (Exception e) {
-                insertMigrationLog(id,migration_status_error,param);
+                insertMigrationLog(id,MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
             }
         }
         return new CommonResult("迁移产品数据迁移成功");
@@ -145,12 +142,12 @@ public class DataApiService {
 
     public void insertMigrationLog(Long id,Integer status,Param param){
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-        MigrationLog log = migrationLogMapper.getByOldId(id);
+        MigrationLog log = migrationLogMapper.getByOldId(id,MigrationTypeEnum.MIGRATION_TYPE_PRODUCT.getCode());
         if (ReflectUtil.isNull(log)) {
             log = new MigrationLog();
             log.setId(IdUtil.generateId());
             log.setOldId(id);
-            log.setType(migration_type_product);
+            log.setType(MigrationTypeEnum.MIGRATION_TYPE_PRODUCT.getCode());
             log.setSourcePartnerId(intToLong(param.getChannelId()));
             log.setStatus(status);
             log.setCreatedAt(LocalDateTime.now());
@@ -180,7 +177,7 @@ public class DataApiService {
                 String code = lifeProductMapper.getCodeById(id);
                 saveNewProduct(param, id, code);
             } catch (Exception e) {
-                insertMigrationLog(id,migration_status_error,param);
+                insertMigrationLog(id,MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
             }
         }
         return new CommonResult("迁移产品数据迁移成功");
@@ -352,14 +349,14 @@ public class DataApiService {
                 log.info("产品导入请求入参：{}",jsonObject);
                 JSONObject importJson = httpService.post(importUrl, jsonObject);
                 if (importJson != null && importJson.getInteger("code").equals(200)) {
-                    insertMigrationLog(id,migration_status_sucessful,param);
+                    insertMigrationLog(id, MigrationStatusEnum.MIGRATION_STATUS_SUCCESS.getCode(),param);
                     log.info("产品code:{}产品迁移成功",code);
                 }else {
-                    insertMigrationLog(id,migration_status_error,param);
+                    insertMigrationLog(id,MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(),param);
                 }
             }
         }else {
-            insertMigrationLog(id,migration_status_already,param);
+            insertMigrationLog(id,MigrationStatusEnum.MIGRATION_STATUS_ALREADLY.getCode(),param);
             log.info("该合作方渠道：{},产品{}已存在，忽略",param.getChannelId(),code);
         }
     }

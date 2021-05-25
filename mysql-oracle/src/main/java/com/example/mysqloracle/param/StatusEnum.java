@@ -6,9 +6,9 @@ package com.example.mysqloracle.param;
 public enum StatusEnum {
     STATUS_承保中(0, 1),
     STATUS_审核( 1, 3),
-    STATUS_撤单( 2, 4),
+    STATUS_撤单( 2, 8),
     STATUS_退保( 3, 6),
-    STATUS_拒保( 4, 4),
+    STATUS_拒保( 4, 8),
     STATUS_人工核保( 5, 1),
     STATUS_犹退( 6, 5),
     STATUS_有效( 7, 3),

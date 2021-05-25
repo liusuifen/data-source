@@ -20,6 +20,6 @@ public interface UnLifeProductAllMapper extends BaseMapper<UnLifeProductAll> {
 
 
     @Select("SELECT code FROM un_life_product_all  where id  in (select product_id from un_life_product where id =#{id})")
-    String getCOdeById(@Param("id") Integer id);
+    String getCodeById(@Param("id") Integer id);
 
 }

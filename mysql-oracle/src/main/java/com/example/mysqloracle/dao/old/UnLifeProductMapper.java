@@ -4,6 +4,7 @@ package com.example.mysqloracle.dao.old;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.example.mysqloracle.entity.old.UnLifeProduct;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 /**
@@ -16,6 +17,9 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface UnLifeProductMapper extends BaseMapper<UnLifeProduct> {
+
+    @Select("select product_id from un_life_product where id=#{id}")
+    Integer getCodeById(@Param("id") Integer id);
 
 
 

@@ -191,4 +191,5 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
         }
         return newValue;
     }
+
 }

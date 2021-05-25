@@ -524,7 +524,7 @@ public interface BasicEnumMapper extends BaseMapper<BasicEnum> {
     List<BasicEnumVo> getHasSSId();
 
 
-    @Select("SELECT\n" +
+    @Select("\t\t\tSELECT\n" +
             "\tid,\n" +
             "\tmodule,\n" +
             "\tcategory,\n" +
@@ -565,7 +565,13 @@ public interface BasicEnumMapper extends BaseMapper<BasicEnum> {
             "\t\tFROM\n" +
             "\t\t\tun_life_ins_insured \n" +
             "\t\tGROUP BY\n" +
-            "\t\t\tinsured_salary_from \n" +
+            "\t\t\tinsured_salary_from  UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\tholder_salary_from AS beneficiaryIsInsured \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_main \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tholder_salary_from \n" +
             "\t\t) a \n" +
             "\t);")
     List<BasicEnumVo> getSourceFrom();

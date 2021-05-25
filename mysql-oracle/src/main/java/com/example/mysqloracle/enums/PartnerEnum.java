@@ -13,7 +13,13 @@ public enum PartnerEnum {
      *
      */
     //佳兆业
-    channelId_佳兆业(22, 25884107053465600L);
+    channelId_佳兆业(22, 25884107053465600L),
+    channelId_众康(27, 25884107053465600L),
+    channelId_大同(25, 25884107053465600L),
+    channelId_汇盟(2, 25884107053465600L),
+    channelId_广商(31, 25884107053465600L),
+    channelId_华润(33, 25884107053465600L),
+    channelId_南粤(34, 25884107053465600L);
 
     private Integer channelId;
     private Long partnerId;

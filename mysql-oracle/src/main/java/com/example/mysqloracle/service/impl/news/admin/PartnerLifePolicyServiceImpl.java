@@ -9,6 +9,8 @@ import com.example.mysqloracle.dao.news.admin.*;
 import com.example.mysqloracle.datasource.DataSourceContextHolder;
 import com.example.mysqloracle.entity.news.*;
 import com.example.mysqloracle.entity.news.admin.*;
+import com.example.mysqloracle.enums.MigrationStatusEnum;
+import com.example.mysqloracle.enums.MigrationTypeEnum;
 import com.example.mysqloracle.enums.PartnerEnum;
 import com.example.mysqloracle.param.Param;
 import com.example.mysqloracle.service.news.admin.PartnerLifePolicyService;
@@ -87,11 +89,8 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
     private PartnerLifePolicyDocumentMapper partnerLifePolicyDocumentMapper;
 
 
-    private static Integer migration_type_policy_to_admin = 3;//1:保单迁移至新系统合作方，2产品，3合作方保单迁移至保联
 
-    private static Integer migration_status_sucessful = 1;//迁移成功
 
-    private static Integer migration_status_error = 2;//迁移失败
 
     @Override
     public CommonResult getAll(Param param) {
@@ -102,7 +101,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
             try{
                 syncPartnerLifePolicy(id,partnerId,param);
             }catch (Exception e){
-                insertMigrationLog(intToLong(id),migration_status_error,param);
+                insertMigrationLog(intToLong(id), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
             }
         }
         return new CommonResult("合作方保单数据同步至保联后台成功");
@@ -117,7 +116,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
             try{
                 syncPartnerLifePolicy(id,partnerId,param);
             }catch (Exception e){
-                insertMigrationLog(intToLong(id),migration_status_error,param);
+                insertMigrationLog(intToLong(id),MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(),param);
             }
         }
         return new CommonResult("失败的保单数据重新同步至保联后台成功");
@@ -295,7 +294,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
                 }
             }
         }
-        insertMigrationLog(intToLong(id),migration_status_sucessful,param);
+        insertMigrationLog(intToLong(id),MigrationStatusEnum.MIGRATION_STATUS_SUCCESS.getCode(),param);
     }
 
     public void insertMigrationLog(Long id,Integer status,Param param){
@@ -305,7 +304,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
             log = new MigrationLog();
             log.setId(IdUtil.generateId());
             log.setOldId(id);
-            log.setType(migration_type_policy_to_admin);
+            log.setType(MigrationTypeEnum.MIGRATION_TYPE_POLICY_TO_ADMIN.getCode());
             log.setSourcePartnerId(intToLong(param.getChannelId()));
             log.setStatus(status);
             log.setCreatedAt(LocalDateTime.now());

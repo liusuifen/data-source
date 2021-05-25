@@ -32,7 +32,7 @@ public interface LifePolicyProgressMapper extends BaseMapper<LifePolicyProgress>
     List<LifePolicyProgress> selectByPolicyId(@Param("lifePolicyId") Long lifePolicyId);
 
 
-    @Select("select id, life_policy_id as lifePolicyId, progress, result, date, file, remark, update_user as updateUser, " +
+    @Select("select id, life_policy_id as lifePolicyId, progress, result, date, file,file_urls as fileUrls remark, update_user as updateUser, " +
             "created_at as createdAt, update_user_id as updateUserId " +
             "from life_policy_progress where life_policy_id=#{lifePolicyId} and progress=#{progress}")
     LifePolicyProgress selectByPolicyIdAndProcess(@Param("lifePolicyId") Long lifePolicyId,@Param("progress") Integer progress);
