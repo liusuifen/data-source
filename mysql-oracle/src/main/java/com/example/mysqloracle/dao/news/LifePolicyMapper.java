@@ -41,4 +41,8 @@ public interface LifePolicyMapper extends BaseMapper<LifePolicy> {
     LifePolicy getByIds(@Param("id") Long id);
 
 
+    @Select("select count(*) from life_policy where source_partner_id=0 and LENGTH(id)=5; ")
+    Integer selectByChannelId();
+
+
 }

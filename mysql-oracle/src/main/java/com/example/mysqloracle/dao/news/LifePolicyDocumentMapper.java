@@ -31,4 +31,8 @@ public interface LifePolicyDocumentMapper extends BaseMapper<LifePolicyDocument>
             "and is_deleted=0")
     List<LifePolicyDocument> selectByPolicyId(@Param("lifePolicyId") Long lifePolicyId);
 
+
+    @Select("select count(*) from life_policy_document where  LENGTH(life_policy_id)=5; ")
+    Integer selectByChannelId();
+
 }

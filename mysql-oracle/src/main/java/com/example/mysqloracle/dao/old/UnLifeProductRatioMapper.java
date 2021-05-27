@@ -36,7 +36,7 @@ public interface UnLifeProductRatioMapper extends BaseMapper<UnLifeProductRatio>
             "create_by as createBy, create_time as createTime, modify_by as modifyBy, modify_time as modifyTime, delete_time as deleteTime, state, fyp_rate as fypRate " +
             "from un_life_product_ratio " +
             "where channel_id=#{channelId} " +
-            "and delete_time is null group by product_id")
+            "and delete_time is null group by product_id,area")
     List<UnLifeProductRatio> getByGroup(@Param("channelId") Integer channleId);
 
 }

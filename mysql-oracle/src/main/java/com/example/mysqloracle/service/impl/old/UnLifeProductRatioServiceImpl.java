@@ -68,19 +68,21 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
         for (UnLifeProductRatio unLifeProductRatio : ratioByGroup) {
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             Long newsLifeProductId = getNewsLifeProductId(unLifeProductRatio.getProductId());
-            LifeProductRatioTemplate lifeProductRatioTemplate = lifeProductRatioTemplateMapper.selectByProductId(newsLifeProductId);
+            Long orgId=intToLong(Integer.valueOf(unLifeProductRatio.getArea()));
+            LifeProductRatioTemplate lifeProductRatioTemplate = lifeProductRatioTemplateMapper.selectByProductId(newsLifeProductId,orgId);
             if(ReflectUtil.isNull(lifeProductRatioTemplate)){
                 lifeProductRatioTemplate=new LifeProductRatioTemplate();
                 lifeProductRatioTemplate.setLifeProductId(newsLifeProductId);
                 lifeProductRatioTemplate.setSystemUserId(intToLong(unLifeProductRatio.getCreateBy()));
                 lifeProductRatioTemplate.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getCreateTime())));
                 lifeProductRatioTemplate.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getModifyTime())));
+                lifeProductRatioTemplate.setOrgId(intToLong(Integer.valueOf(unLifeProductRatio.getArea())));
                 lifeProductRatioTemplate.setIsDeleted(0);
                 if(param.getChannelId()== PartnerEnum.channelId_佳兆业.getChannelId()){
                     DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
                     String code = unLifeProductAllMapper.getCodeById(unLifeProductRatio.getProductId());
                     if(code!=null){
-                        lifeProductRatioTemplate.setName("JZY_"+code);
+                        lifeProductRatioTemplate.setName("JZY_"+code+"_"+unLifeProductRatio.getArea());
                     }
                 }
                 DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
@@ -114,6 +116,7 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
          *价值系数模板明细表
          */
         Long newsLifeProductId = getNewsLifeProductId(unLifeProductRatio.getProductId());
+        Long orgId=intToLong(Integer.valueOf(unLifeProductRatio.getArea()));
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         Integer rationNum = lifeProductRatioTemplateDetailMapper.getByTemplateId(unLifeProductRatio.getId());
         if(rationNum==0){
@@ -130,7 +133,7 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
             lifeProductRatioTemplateDetail.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getModifyTime())));
             lifeProductRatioTemplateDetail.setIsDeleted(0);//默认值
             lifeProductRatioTemplateDetail.setSourceWay(1);
-            lifeProductRatioTemplateDetail.setTemplateId(getTemplate(newsLifeProductId));
+            lifeProductRatioTemplateDetail.setTemplateId(getTemplate(newsLifeProductId,orgId));
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             lifeProductRatioTemplateDetailMapper.insert(lifeProductRatioTemplateDetail);
             log.info("该价值系数模板明细表数据迁移成功，价值系数模板明细表id:{}",unLifeProductRatio.getId());
@@ -148,7 +151,7 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
             lifeProductRatioTemplateMap.setLifeProductId(newsLifeProductId);
             lifeProductRatioTemplateMap.setOrgId(intToLong(Integer.valueOf(unLifeProductRatio.getArea())));
             lifeProductRatioTemplateMap.setIsDeleted(0);
-            lifeProductRatioTemplateMap.setTemplateId(getTemplate(newsLifeProductId));
+            lifeProductRatioTemplateMap.setTemplateId(getTemplate(newsLifeProductId,orgId));
             if(param.getChannelId()== PartnerEnum.channelId_佳兆业.getChannelId()){
                 lifeProductRatioTemplateMap.setStartTime(DateUtil.strToLocalDate("2019-09-27"));
             }else if(param.getChannelId()== PartnerEnum.channelId_汇盟.getChannelId()){
@@ -162,7 +165,7 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
             }else if(param.getChannelId()== PartnerEnum.channelId_华润.getChannelId()){
                 lifeProductRatioTemplateMap.setStartTime(DateUtil.strToLocalDate("2020-11-18"));
             }
-            lifeProductRatioTemplateMap.setEndTime(DateUtil.strToLocalDate("2099-01-01"));
+            lifeProductRatioTemplateMap.setEndTime(DateUtil.strToLocalDate("2021-12-31"));
             lifeProductRatioTemplateMap.setSourceWay(1);
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             lifeProductRatioTemplateMapMapper.insert(lifeProductRatioTemplateMap);
@@ -187,9 +190,6 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
              id = lifeProductMapper.getIdByCode(code);
         }
-//        if(id==null){
-//            id=0L;
-//        }
         return id;
     }
 
@@ -212,10 +212,10 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
      * @param
      * @return
      */
-    public Integer getTemplate(Long lifeProductId){
+    public Integer getTemplate(Long lifeProductId,Long orgId){
         Integer templateId=0;
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-        LifeProductRatioTemplate lifeProductRatioTemplate = lifeProductRatioTemplateMapper.selectByProductId(lifeProductId);
+        LifeProductRatioTemplate lifeProductRatioTemplate = lifeProductRatioTemplateMapper.selectByProductId(lifeProductId,orgId);
         if(ReflectUtil.isNotNull(lifeProductRatioTemplate)){
             templateId=lifeProductRatioTemplate.getId();
         }

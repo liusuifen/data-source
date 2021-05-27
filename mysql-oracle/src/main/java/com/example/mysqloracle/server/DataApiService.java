@@ -58,6 +58,9 @@ public class DataApiService {
     @Autowired
     private LifeProductTagMapMapper lifeProductTagMapMapper;
 
+    @Autowired
+    private UnLifeProductMapper unLifeProductMapper;
+
 
 
 
@@ -70,11 +73,14 @@ public class DataApiService {
      */
     public CommonResult productMove(Param param) {
         List<String> productCode=null;
-        if(param.getChannelId()==22){
-             productCode = Const.JIAZAOYE_CODE;
-        }else if (param.getChannelId()==27){
-             productCode = Const.ZONGKANG_CODE;
-        }
+
+//        if(param.getChannelId()==22){
+//             productCode = Const.JIAZAOYE_CODE;
+//        }else if (param.getChannelId()==27){
+//             productCode = Const.ZONGKANG_CODE;
+//        }
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+        productCode =unLifeProductMapper.getProductCode(param.getChannelId());
         for (String code : productCode) {
             Long id = null;
             try {
@@ -351,6 +357,8 @@ public class DataApiService {
                 if (importJson != null && importJson.getInteger("code").equals(200)) {
                     insertMigrationLog(id, MigrationStatusEnum.MIGRATION_STATUS_SUCCESS.getCode(),param);
                     log.info("产品code:{}产品迁移成功",code);
+                }else if(importJson != null && importJson.getInteger("code").equals(1)){
+                    log.info("该产品code:{}产品已存在，忽略",code);
                 }else {
                     insertMigrationLog(id,MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(),param);
                 }

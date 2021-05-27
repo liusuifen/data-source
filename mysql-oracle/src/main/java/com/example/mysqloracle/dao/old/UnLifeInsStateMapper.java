@@ -27,4 +27,8 @@ public interface UnLifeInsStateMapper extends BaseMapper<UnLifeInsState> {
             "where policy_id =#{policyId} " +
             "and delete_time is null ")
     List<UnLifeInsState> getByPolicyId(@Param("policyId") Integer policyId);
+
+
+    @Select("select count(*) from un_life_ins_state where policy_id in (select id from un_life_ins_main where channel_id=#{channelId} and is_first=1 and delete_time is null) and delete_time is null;")
+    Integer selectByChannelId(@Param("channelId") Integer channelId);
 }

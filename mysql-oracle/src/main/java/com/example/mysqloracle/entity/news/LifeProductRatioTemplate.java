@@ -45,6 +45,9 @@ public class LifeProductRatioTemplate implements Serializable {
     @ApiModelProperty(value = "产品id")
     @TableField("life_product_id")
     private Long lifeProductId;
+    @ApiModelProperty(value = "所属机构,迁移数据使用字段，0：默认值")
+    @TableField("org_id")
+    private Long orgId;
 
 
     public static final String ID = "id";

@@ -33,4 +33,8 @@ public interface LifePolicyProductMapper extends BaseMapper<LifePolicyProduct> {
             "commission_way as commissionWay, commission_way_renewal as commissionWayRenewal " +
             "from life_policy_product where life_policy_id=#{lifePolicyId}")
     List<LifePolicyProduct> selectByPolicyId(@Param("lifePolicyId") Long lifePolicyId);
+
+
+    @Select("select count(*) from life_policy_product where  LENGTH(life_policy_id)=5; ")
+    Integer selectByChannelId();
 }

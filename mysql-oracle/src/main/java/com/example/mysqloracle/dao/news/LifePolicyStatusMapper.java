@@ -35,4 +35,7 @@ public interface LifePolicyStatusMapper extends BaseMapper<LifePolicyStatus> {
 
     int insertLifePolicyStatus(LifePolicyStatus lifePolicyStatus);
 
+    @Select("select count(*) from life_policy_status where  LENGTH(life_policy_id)=5; ")
+    Integer selectByChannelId();
+
 }

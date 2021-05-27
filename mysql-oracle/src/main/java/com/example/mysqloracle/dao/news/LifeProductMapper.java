@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * <p>
  * 寿险产品库 Mapper 接口
@@ -41,6 +43,10 @@ public interface LifeProductMapper extends BaseMapper<LifeProduct> {
 
     @Select("select code from life_product where `id` = #{id} and is_deleted=0;")
     String getCodeById(@Param("id") Long id);
+
+
+    @Select("select code from life_product where  code!=''")
+    List<String> selectProductCode();
 
 
 

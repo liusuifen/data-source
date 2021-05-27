@@ -21,7 +21,9 @@ public interface LifeProductRatioTemplateMapper extends BaseMapper<LifeProductRa
 
 
     @Select("select id, name, status, system_user_id as systemUserId, created_at as createdAt, updated_at as updatedAt, " +
-            "is_deleted as isDeleted , life_product_id as lifeProductId from life_product_ratio_template where life_product_id=#{lifeProductId}")
-    LifeProductRatioTemplate selectByProductId(@Param("lifeProductId") Long lifeProductId);
+            "is_deleted as isDeleted ,org_id as orgId, life_product_id as lifeProductId from life_product_ratio_template " +
+            "where life_product_id=#{lifeProductId} " +
+            "and org_id=#{orgId}")
+    LifeProductRatioTemplate selectByProductId(@Param("lifeProductId") Long lifeProductId,@Param("orgId") Long orgId);
 
 }

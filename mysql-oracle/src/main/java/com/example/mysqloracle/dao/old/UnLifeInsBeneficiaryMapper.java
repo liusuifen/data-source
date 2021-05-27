@@ -31,6 +31,9 @@ public interface UnLifeInsBeneficiaryMapper extends BaseMapper<UnLifeInsBenefici
             "and delete_time is null")
     List<UnLifeInsBeneficiary> getByPolicyId(@Param("policyId") Integer policyId);
 
+    @Select("select count(*) from un_life_ins_beneficiary where policy_id in (select id from un_life_ins_main where channel_id=#{channelId} and is_first=1 and delete_time is null) and delete_time is null;")
+    Integer selectByChannelId(@Param("channelId") Integer channelId);
+
 
 
 }

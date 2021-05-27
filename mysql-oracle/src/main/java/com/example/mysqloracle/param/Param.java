@@ -1,6 +1,7 @@
 package com.example.mysqloracle.param;
 
 import lombok.Data;
+import lombok.Value;
 
 @Data
 public class Param {
@@ -12,6 +13,7 @@ public class Param {
     private String endDate;
 
     private String url;
+
 
 
 
