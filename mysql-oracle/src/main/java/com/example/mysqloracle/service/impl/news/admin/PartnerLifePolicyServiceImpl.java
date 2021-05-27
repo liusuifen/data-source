@@ -98,11 +98,11 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
         List<Integer> policys = migrationLogMapper.getSuccessPolicy(intToLong(param.getChannelId()));
         Long partnerId=PartnerEnum.getPartnerIdByChannelId(param.getChannelId());
         for (Integer id : policys) {
-            try{
+//            try{
                 syncPartnerLifePolicy(id,partnerId,param);
-            }catch (Exception e){
-                insertMigrationLog(intToLong(id), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
-            }
+//            }catch (Exception e){
+//                insertMigrationLog(intToLong(id), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
+//            }
         }
         return new CommonResult("合作方保单数据同步至保联后台成功");
     }
@@ -128,7 +128,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
          */
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         LifePolicy lifePolicy = lifePolicyMapper.getByIds(intToLong(id));
-        if(ReflectUtil.isNull(lifePolicy)){
+        if(!ReflectUtil.isNull(lifePolicy)){
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
             Integer num = partnerLifePolicyMapper.getCount(lifePolicy.getId());
             if(num==0){
@@ -175,7 +175,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
                 if(num==0){
                     PartnerLifePolicyBeneficiary partnerLifePolicyBeneficiary = new PartnerLifePolicyBeneficiary();
                     BeanUtils.copyProperties(lifePolicyBeneficiary,partnerLifePolicyBeneficiary);
-                    partnerLifePolicyBeneficiary.setSourceId(partnerId);
+//                    partnerLifePolicyBeneficiary.setSourceId(partnerId);
                     DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
                     partnerLifePolicyBeneficiaryMapper.insert(partnerLifePolicyBeneficiary);
                     log.info("保单号id{}partner_life_policy_holder表同步至保联后台成功",lifePolicyBeneficiary.getId());
@@ -197,7 +197,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
                     if(num==0){
                         PartnerLifePolicyInsured partnerLifePolicyInsured = new PartnerLifePolicyInsured();
                         BeanUtils.copyProperties(lifePolicyInsured,partnerLifePolicyInsured);
-                        partnerLifePolicyInsured.setSourceId(partnerId);
+//                        partnerLifePolicyInsured.setSourceId(partnerId);
                         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
                         partnerLifePolicyInsuredMapper.insert(partnerLifePolicyInsured);
                         log.info("保单号id{}partner_life_policy_insured表同步至保联后台成功",lifePolicyInsured.getId());
@@ -221,7 +221,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
                 if(num==0){
                     PartnerLifePolicyProduct partnerLifePolicyProduct = new PartnerLifePolicyProduct();
                     BeanUtils.copyProperties(lifePolicyProduct,partnerLifePolicyProduct);
-                    partnerLifePolicyProduct.setSourceId(partnerId);
+//                    partnerLifePolicyProduct.setSourceId(partnerId);
                     DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
                     partnerLifePolicyProductMapper.insert(partnerLifePolicyProduct);
                     log.info("保单号id{}partner_life_policy_product表同步至保联后台成功",lifePolicyProduct.getId());
@@ -241,11 +241,11 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
                 DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
                 Integer num = partnerLifePolicyProgressMapper.getCount(lifePolicyProgress.getId());
                 if(num==0){
-                    PartnerLifePolicyProgress partnerLifePolicyProduct = new PartnerLifePolicyProgress();
-                    BeanUtils.copyProperties(lifePolicyProgress,partnerLifePolicyProduct);
-                    partnerLifePolicyProduct.setSourceId(partnerId);
+                    PartnerLifePolicyProgress partnerLifePolicyProgress = new PartnerLifePolicyProgress();
+                    BeanUtils.copyProperties(lifePolicyProgress,partnerLifePolicyProgress);
+//                    partnerLifePolicyProgress.setSourceId(partnerId);
                     DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
-                    partnerLifePolicyProgressMapper.insert(partnerLifePolicyProduct);
+                    partnerLifePolicyProgressMapper.insert(partnerLifePolicyProgress);
                     log.info("保单号id{}partner_life_policy_progress表同步至保联后台成功",lifePolicyProgress.getId());
                 }else {
                     log.info("保单号id{}partner_life_policy_progress表已同步至保联后台，忽略",lifePolicyProgress.getId());
@@ -260,11 +260,11 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
         if(!CollectionUtils.isEmpty(lifePolicyStatusList)){
             for (LifePolicyStatus lifePolicyStatus : lifePolicyStatusList) {
                 DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
-                Integer num = partnerLifePolicyProgressMapper.getCount(lifePolicyStatus.getId());
+                Integer num = partnerLifePolicyStatusMapper.getCount(lifePolicyStatus.getId());
                 if(num==0){
                     PartnerLifePolicyStatus partnerLifePolicyStatus = new PartnerLifePolicyStatus();
                     BeanUtils.copyProperties(lifePolicyStatus,partnerLifePolicyStatus);
-                    partnerLifePolicyStatus.setSourceId(partnerId);
+//                    partnerLifePolicyStatus.setSourceId(partnerId);
                     DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
                     partnerLifePolicyStatusMapper.insert(partnerLifePolicyStatus);
                     log.info("保单号id{}partner_life_policy_status表同步至保联后台成功",lifePolicyStatus.getId());
@@ -278,14 +278,14 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
          */
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         List<LifePolicyDocument> lifePolicyDocumentList = lifePolicyDocumentMapper.selectByPolicyId(intToLong(id));
-        if(CollectionUtils.isEmpty(lifePolicyDocumentList)){
+        if(!CollectionUtils.isEmpty(lifePolicyDocumentList)){
             for (LifePolicyDocument lifePolicyDocument : lifePolicyDocumentList) {
                 DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
                 Integer num = partnerLifePolicyDocumentMapper.getCount(lifePolicyDocument.getId());
                 if(num==0){
                     PartnerLifePolicyDocument partnerLifePolicyDocument = new PartnerLifePolicyDocument();
                     BeanUtils.copyProperties(lifePolicyDocument,partnerLifePolicyDocument);
-                    partnerLifePolicyDocument.setSourceId(partnerId);
+//                    partnerLifePolicyDocument.setSourceId(partnerId);
                     DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
                     partnerLifePolicyDocumentMapper.insert(partnerLifePolicyDocument);
                     log.info("保单号id{}partner_life_policy_document表同步至保联后台成功",lifePolicyDocument.getId());
@@ -313,7 +313,7 @@ public class PartnerLifePolicyServiceImpl extends ServiceImpl<PartnerLifePolicyM
             migrationLogMapper.insert(log);
         } else {
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-            migrationLogMapper.updateAt(LocalDateTime.now(), status, id);
+            migrationLogMapper.updateAt(LocalDateTime.now(), status, id,MigrationTypeEnum.MIGRATION_TYPE_POLICY_TO_ADMIN.getCode());
         }
     }
 

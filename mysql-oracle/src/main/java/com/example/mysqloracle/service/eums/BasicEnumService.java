@@ -89,4 +89,6 @@ public interface BasicEnumService extends IService<BasicEnum> {
 
 
     String getNewEnum(String id);
+
+
 }

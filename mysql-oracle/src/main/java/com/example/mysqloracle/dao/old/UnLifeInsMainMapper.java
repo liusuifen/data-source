@@ -38,7 +38,7 @@ public interface UnLifeInsMainMapper extends BaseMapper<UnLifeInsMain> {
             "is_legal_benefic as isLegalBenefic, extend_items as extendItems, img_json as imgJson,  state as state, pay_status as payStatus, is_temp as isTemp, " +
             "remark, is_property as isProperty, create_by as createBy, create_time as createTime, modify_by as modifyBy, modify_time as modifyTime , " +
             "war_id as warId , delete_time as deleteTime " +
-            "from un_life_ins_main where id=22075 " +
+            "from un_life_ins_main where 1=1 " +
             "and channel_id=#{channelId} " +
             "and is_first=1 " +
             "and delete_time is null " +

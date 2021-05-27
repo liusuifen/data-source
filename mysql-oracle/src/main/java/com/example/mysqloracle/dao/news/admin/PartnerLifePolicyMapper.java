@@ -21,4 +21,8 @@ public interface PartnerLifePolicyMapper extends BaseMapper<PartnerLifePolicy> {
     @Select("select count(*) from partner_life_policy where id=#{id} and is_deleted = 0")
     Integer getCount(@Param("id") Long id);
 
+
+    @Select("select count(*) from partner_life_policy where partner_id=#{partnerId} and LENGTH(id)=5;  ")
+    Integer selectByChannelId(@Param("partnerId") Long partnerId);
+
 }

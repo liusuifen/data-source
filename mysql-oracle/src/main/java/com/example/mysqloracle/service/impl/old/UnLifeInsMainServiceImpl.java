@@ -1026,7 +1026,7 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
             migrationLogMapper.insert(log);
         } else {
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-            migrationLogMapper.updateAt(LocalDateTime.now(), status, id);
+            migrationLogMapper.updateAt(LocalDateTime.now(), status, id,MigrationTypeEnum.MIGRATION_TYPE_POLICY.getCode());
         }
     }
 

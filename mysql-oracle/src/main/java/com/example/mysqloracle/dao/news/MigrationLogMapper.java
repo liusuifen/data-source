@@ -71,7 +71,7 @@ public interface MigrationLogMapper extends BaseMapper<MigrationLog> {
     /**
      * 更新迁移状态
      */
-    @Update("update migration_log set updated_at =#{updatedAt},status=#{status} where old_id=#{oldId}")
-    Integer updateAt(@Param("updatedAt")LocalDateTime updatedAt,@Param("status")Integer status,@Param("oldId") Long oldId);
+    @Update("update migration_log set updated_at =#{updatedAt},status=#{status} where old_id=#{oldId} and type=#{type}")
+    Integer updateAt(@Param("updatedAt")LocalDateTime updatedAt,@Param("status")Integer status,@Param("oldId") Long oldId,@Param("type") Integer type);
 
 }

@@ -675,6 +675,118 @@ public interface BasicEnumMapper extends BaseMapper<BasicEnum> {
     String getNewValueById(@Param("id") String id);
 
 
+    @Select("select a.* from \n" +
+            "\t (SELECT \n" +
+            "\t\t\t\tholder_gender AS code \n" +
+            "\t\tFROM \n" +
+            "\t\t\t\tun_life_ins_main\n" +
+            "\t\tGROUP BY \n" +
+            "\t\t\t\tholder_gender UNION ALL\n" +
+            "\t\tSELECT \n" +
+            "\t\t\t\tinsured_gender AS code \n" +
+            "\t\tFROM \n" +
+            "\t\t\t\tun_life_ins_insured \n" +
+            "\t\tGROUP BY\t\n" +
+            "\t\t\t\tinsured_gender UNION ALL\t\t\t\n" +
+            "\t\tSELECT\n" +
+            "\t\t\tholder_ID_type AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_main \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tholder_ID_type UNION ALL\n" +
+            "\t\tSELECT\n" +
+            "\t\t\tID_type AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_beneficiary \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tID_type UNION ALL\n" +
+            "\t\tSELECT\n" +
+            "\t\t\tinsured_ID_type AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_insured \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tinsured_ID_type UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\tholder_marriage AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_main \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tholder_marriage UNION ALL\n" +
+            "\t\tSELECT\n" +
+            "\t\t\tinsured_marriage AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_insured \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tinsured_marriage UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\tbank_name AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_main \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tbank_name UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\tnation  as code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_beneficiary \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tnation UNION ALL\n" +
+            "\t\tSELECT\n" +
+            "\t\t\tinsured_nation AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_insured \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tinsured_nation UNION ALL\n" +
+            "\t\tSELECT\n" +
+            "\t\t\tbeneficiary_is_insured AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_beneficiary \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tbeneficiary_is_insured  UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\trel_holder_insured AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_insured \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\trel_holder_insured  UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\trel_insured_holder AS code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_insured \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\trel_insured_holder UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\ttype   as code \n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_beneficiary \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\ttype UNION ALL\n" +
+            "\t\t\tSELECT\n" +
+            "\t\t\tholder_has_SSID   as code\n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_main \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tholder_has_SSID  UNION ALL\n" +
+            "\t\tSELECT\n" +
+            "\t\thas_insured_SSID AS code\n" +
+            "\t\tFROM\n" +
+            "\t\tun_life_ins_insured\n" +
+            "\t\tGROUP BY\n" +
+            "\t\thas_insured_SSID UNION ALL\n" +
+            "\t\tSELECT\n" +
+            "\t\t\tinsured_salary_from   as code\n" +
+            "\t\tFROM\n" +
+            "\t\t\tun_life_ins_insured \n" +
+            "\t\tGROUP BY\n" +
+            "\t\t\tinsured_salary_from UNION ALL\n" +
+            "\t\tSELECT \n" +
+            "\t\tholder_salary_from AS code\n" +
+            "\t\tFROM\n" +
+            "\t\tun_life_ins_main\n" +
+            "\t\tGROUP BY\n" +
+            "\t\tholder_salary_from) a where a.code!=\"\"")
+    List<String> checkEnum();
+
+
 
 
 

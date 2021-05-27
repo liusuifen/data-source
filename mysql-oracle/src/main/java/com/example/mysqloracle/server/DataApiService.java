@@ -106,9 +106,9 @@ public class DataApiService {
      * 从保联获取产品
      */
     public CommonResult createTags(Param param) {
-//        List<String> jiazaoyeCode = Const.JIAZAOYE_CODE;
-        List<String> jiazaoyeCode = Arrays.asList("LE234","AKI");
-        for (String code : jiazaoyeCode) {
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+        List<String> productCode =unLifeProductMapper.getProductCode(param.getChannelId());
+        for (String code : productCode) {
             Long id = null;
 //            try {
                 /**
@@ -162,7 +162,7 @@ public class DataApiService {
             migrationLogMapper.insert(log);
         } else {
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-            migrationLogMapper.updateAt(LocalDateTime.now(), status, id);
+            migrationLogMapper.updateAt(LocalDateTime.now(), status, id,MigrationTypeEnum.MIGRATION_TYPE_PRODUCT.getCode());
         }
     }
 
@@ -404,6 +404,8 @@ public class DataApiService {
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             lifeProductTagMapMapper.insert(lifeProductTagMap);
             log.info("产品id{},产品标签生成成功",productId);
+        }else {
+            log.info("产品id{},产品标签已存在，忽略",productId);
         }
     }
 
