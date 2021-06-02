@@ -51,7 +51,7 @@ public class UnBasicDistrict implements Serializable {
     private Integer order;
     @ApiModelProperty(value = "是否显示,0禁用,1正常,2恒大不显示")
     @TableField("status")
-    private Boolean status;
+    private Integer status;
     @TableField("create_time")
     private Integer createTime;
     @TableField("modify_by")

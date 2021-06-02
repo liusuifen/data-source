@@ -94,7 +94,7 @@ public class LifeProduct implements Serializable {
     @TableField("updated_at")
     private LocalDateTime updatedAt;
     @TableField("is_deleted")
-    private Boolean isDeleted;
+    private Integer isDeleted;
     @ApiModelProperty(value = "销售方式 1：h5跳转 2:二维码 3：api对接")
     @TableField("sale_way")
     private Integer saleWay;

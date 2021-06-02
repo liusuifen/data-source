@@ -115,7 +115,7 @@ public class UnLifeInsBeneficiary implements Serializable {
     private String deathRate;
     @ApiModelProperty(value = "受益人状态：0=作废,1=正常.")
     @TableField("state")
-    private Boolean state;
+    private Integer state;
     @ApiModelProperty(value = "受益人列表创建人编号")
     @TableField("create_by")
     private Integer createBy;

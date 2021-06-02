@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * <p>
  * 组织架构 Mapper 接口
@@ -27,5 +29,9 @@ public interface OrgMapper extends BaseMapper<Org> {
             "updated_at as updatedAt, config_agent_contract as configAgentContract, api_date as apiDate, app_key as appKey, key from org " +
             "where id=#{id}")
     Org getById(@Param("id") Long id);
+
+
+    @Select("SELECT id from org  where `level` in (1,2,3,4)  and `status`=1 and is_deleted=0 order by level_order asc")
+    List<Long> getOrg();
 
 }

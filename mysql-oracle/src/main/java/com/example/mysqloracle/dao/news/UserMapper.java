@@ -35,4 +35,7 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select team_id from  user where id=#{id}")
     Long getTeamById(@Param("id") Long id);
 
+    @Select("select id from user where role_type=#{roleType} limit 1")
+    Long getByRoleType(@Param("roleType") Integer roleType);
+
 }

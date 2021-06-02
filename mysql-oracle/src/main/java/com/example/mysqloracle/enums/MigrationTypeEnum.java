@@ -8,7 +8,8 @@ public enum MigrationTypeEnum {
     MIGRATION_TYPE_POLICY( 1, "保单"),
     MIGRATION_TYPE_PRODUCT( 2, "产品"),
     MIGRATION_TYPE_POLICY_TO_ADMIN(3,"合作方同步到保联"),
-    MIGRATION_TYPE_RATE( 4, "折标");
+    MIGRATION_TYPE_RATE( 4, "折标"),
+    MIGRATION_TYPE_COURSE( 5, "课程");
 
 
     private Integer code;

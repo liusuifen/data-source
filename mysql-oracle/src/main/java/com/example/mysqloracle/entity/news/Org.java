@@ -36,7 +36,7 @@ public class Org implements Serializable {
     private String parentIdJson;
     @ApiModelProperty(value = "类型：1、内勤2、外勤3、渠道0表示公司")
     @TableField("type")
-    private Boolean type;
+    private Integer type;
     @ApiModelProperty(value = "机构层级: 1：T1(总公司级)、2：T2(省级)、 3：T3(市级)、 4：T4(县级)、5:渠道、6:部门、7:团队")
     @TableField("level")
     private Integer level;
@@ -93,7 +93,7 @@ public class Org implements Serializable {
     private Integer channelType;
     @ApiModelProperty(value = "冗余字段，是否属于渠道1、是0不是")
     @TableField("is_channel")
-    private Boolean isChannel;
+    private Integer isChannel;
     @ApiModelProperty(value = "是否网销牌照：1、是0、否")
     @TableField("is_online_license")
     private Integer isOnlineLicense;

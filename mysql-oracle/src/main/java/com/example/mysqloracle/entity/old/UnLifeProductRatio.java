@@ -77,7 +77,7 @@ public class UnLifeProductRatio implements Serializable {
     private Integer deleteTime;
     @ApiModelProperty(value = "状态，开启1/禁用0")
     @TableField("state")
-    private Boolean state;
+    private Integer state;
     @ApiModelProperty(value = "首佣率，逗号间隔（针对盛世安康产品首佣率分档）")
     @TableField("fyp_rate")
     private String fypRate;

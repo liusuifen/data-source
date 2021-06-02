@@ -56,10 +56,10 @@ public class UnLifeProduct implements Serializable {
     private String saleCity;
     @ApiModelProperty(value = "是否可以对比，1可以，0不可以")
     @TableField("compare")
-    private Boolean compare;
+    private Integer compare;
     @ApiModelProperty(value = "是否上线")
     @TableField("state")
-    private Boolean state;
+    private Integer state;
     @TableField("create_by")
     private Integer createBy;
     @TableField("create_time")

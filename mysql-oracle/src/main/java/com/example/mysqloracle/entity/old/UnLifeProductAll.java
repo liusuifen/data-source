@@ -37,7 +37,7 @@ public class UnLifeProductAll implements Serializable {
     private String pid;
     @ApiModelProperty(value = "险种分类：0附加险，1主险，2双主险")
     @TableField("is_primary")
-    private Boolean isPrimary;
+    private Integer isPrimary;
     @ApiModelProperty(value = "关联un_basic_company表的id")
     @TableField("company_id")
     private Integer companyId;
@@ -82,7 +82,7 @@ public class UnLifeProductAll implements Serializable {
     private String insType;
     @ApiModelProperty(value = "是否可以对比，1可以，0不可以")
     @TableField("compare")
-    private Boolean compare;
+    private Integer compare;
     @ApiModelProperty(value = "条款文件")
     @TableField("statement")
     private String statement;
@@ -91,22 +91,22 @@ public class UnLifeProductAll implements Serializable {
     private String insuredRule;
     @ApiModelProperty(value = "是否在线投保：1是，0否")
     @TableField("online_buy")
-    private Boolean onlineBuy;
+    private Integer onlineBuy;
     @ApiModelProperty(value = "计划书状态：0禁用 1启用")
     @TableField("plan_state")
-    private Boolean planState;
+    private Integer planState;
     @ApiModelProperty(value = " 平板计划书上线状态 0 否  1 是")
     @TableField("plan_state_pad")
-    private Boolean planStatePad;
+    private Integer planStatePad;
     @ApiModelProperty(value = "是否具备绿通服务,0否 1是")
     @TableField("is_green_server")
-    private Boolean isGreenServer;
+    private Integer isGreenServer;
     @ApiModelProperty(value = "是否养老社区：0否，1是")
     @TableField("is_community")
-    private Boolean isCommunity;
+    private Integer isCommunity;
     @ApiModelProperty(value = "险种状态：0禁用 1启用")
     @TableField("status")
-    private Boolean status;
+    private Integer status;
     @ApiModelProperty(value = "产品组合代码")
     @TableField("package_code")
     private String packageCode;

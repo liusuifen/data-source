@@ -35,10 +35,10 @@ public class UnHrRank implements Serializable {
     private String rankName;
     @ApiModelProperty(value = "1启用,2禁用")
     @TableField("state")
-    private Boolean state;
+    private Integer state;
     @ApiModelProperty(value = "是否代理人职级（用于控制移动端是否显示），0否，1是")
     @TableField("view")
-    private Boolean view;
+    private Integer view;
     @TableField("create_by")
     private Integer createBy;
     @TableField("create_time")
@@ -54,7 +54,7 @@ public class UnHrRank implements Serializable {
     private Integer deleteTime;
     @ApiModelProperty(value = "注册默认职级，1是，0否")
     @TableField("default_rank")
-    private Boolean defaultRank;
+    private Integer defaultRank;
     @ApiModelProperty(value = "代理人职级排序（越大职级越大）")
     @TableField("agent_sort")
     private Integer agentSort;

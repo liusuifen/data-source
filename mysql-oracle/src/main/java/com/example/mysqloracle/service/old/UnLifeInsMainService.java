@@ -24,6 +24,8 @@ public interface UnLifeInsMainService extends IService<UnLifeInsMain> {
 
     CommonResult getFail(Param param);
 
+    CommonResult changeHesitateDate(Param param);
+
     CommonResult createCustomer(Param param);
 
     CommonResult  getTaxType();

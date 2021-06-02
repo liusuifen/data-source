@@ -3,6 +3,7 @@ package com.example.mysqloracle.dao.news;
 
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.example.mysqloracle.entity.news.LifePolicy;
+import com.example.mysqloracle.entity.news.LifeVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -43,6 +44,24 @@ public interface LifePolicyMapper extends BaseMapper<LifePolicy> {
 
     @Select("select count(*) from life_policy where source_partner_id=0 and LENGTH(id)=5; ")
     Integer selectByChannelId();
+
+    @Select("select aa.* from (\n" +
+            "            SELECT\n" +
+            "                b.date as returnDate,\n" +
+            "                date_add(b.date, interval (select max(aa.hesitate_time) from life_policy_product aa where aa.life_policy_id = a.id and aa.is_deleted = 0) DAY) as validHesitateDate,\n" +
+            "                a.id,\n" +
+            "                a.is_after_hesitate as isAfterHesitate,\n" +
+            "                a.is_channel as isChannel,\n" +
+            "                a.date_accept as dateAccept,\n" +
+            "                (select aa.`code` from life_policy_product aa where aa.is_primary = 1 and aa.is_deleted = 0 and aa.life_policy_id = a.id limit 1) mainProductCode\n" +
+            "            FROM life_policy a\n" +
+            "            JOIN life_policy_progress b ON a.id = b.life_policy_id\n" +
+            "            AND b.progress = 16 AND b.result = 1\n" +
+            "            WHERE a.progress in (16,17,18,19,20,21) AND a.`status` IN ( 2, 3 ) AND a.is_after_hesitate = 0\n" +
+            "        ) aa\n" +
+            "        where aa.validHesitateDate < now() and aa.id=#{id};")
+    LifeVo selectHesitateDate(@Param("id") Long id);
+
 
 
 }

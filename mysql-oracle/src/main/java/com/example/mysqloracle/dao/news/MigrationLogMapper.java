@@ -48,6 +48,14 @@ public interface MigrationLogMapper extends BaseMapper<MigrationLog> {
     List<Integer> getErrorPolicy(@Param("sourcePartnerId") Long sourcePartnerId);
 
     /**
+     * 获取迁移失败的保单id
+     * @param sourcePartnerId
+     * @return
+     */
+    @Select("select old_id from migration_log where  source_partner_id=#{sourcePartnerId} and status=2 and type=5")
+    List<Integer> getErrorCourse(@Param("sourcePartnerId") Long sourcePartnerId);
+
+    /**
      * 获取全部迁移成功的保单id
      */
     @Select("select old_id from migration_log where  source_partner_id=#{sourcePartnerId} and status=1 and type=1")

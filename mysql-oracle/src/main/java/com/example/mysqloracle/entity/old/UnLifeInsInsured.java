@@ -148,7 +148,7 @@ public class UnLifeInsInsured implements Serializable {
     private String extendItems;
     @ApiModelProperty(value = "被保险人状态：0=作废,1=正常.")
     @TableField("state")
-    private Boolean state;
+    private Integer state;
     @ApiModelProperty(value = "被保险人列表创建人编号")
     @TableField("create_by")
     private Integer createBy;

@@ -44,8 +44,19 @@ public class UnLifeInsMainController {
     @ApiOperation("迁移失败保单重新迁移")
     @PostMapping(value = "/moveAgain")
     public CommonResult moveAgain(@RequestBody Param param)  {
-        log.info("保单迁移请求入参{}",param);
+        log.info("迁移失败保单重新迁移请求入参{}",param);
         return unLifeInsMainService.getFail(param);
+    }
+
+
+    /**
+     *保单life_policy主表同步
+     */
+    @ApiOperation("是否过犹豫期修改")
+    @PostMapping(value = "/changeHesitateDate")
+    public CommonResult changeHesitateDate(@RequestBody Param param)  {
+        log.info("是否过犹豫期修改请求入参{}",param);
+        return unLifeInsMainService.changeHesitateDate(param);
     }
 
 
@@ -55,7 +66,7 @@ public class UnLifeInsMainController {
     @ApiOperation("根据保单数据生成投保人、被保人的客户数据")
     @PostMapping(value = "/createCustomer")
     public CommonResult createCustomer(@RequestBody Param param)  {
-        log.info("保单迁移请求入参{}",param);
+        log.info("根据保单数据生成投保人、被保人的客户数据请求入参{}",param);
         return unLifeInsMainService.createCustomer(param);
     }
 

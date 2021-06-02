@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * <p>
  * 系统管理-职级维护表 Mapper 接口
@@ -21,5 +23,9 @@ public interface SystemRankMapper extends BaseMapper<SystemRank> {
             "from system_rank " +
             "where id=#{id}")
     SystemRank getById(@Param("id")Long id);
+
+
+    @Select("select id from system_rank where `status`=2 and is_deleted=0 ")
+    List<Long> getAllID();
 
 }

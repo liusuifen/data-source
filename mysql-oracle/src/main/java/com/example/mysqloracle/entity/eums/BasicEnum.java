@@ -66,7 +66,7 @@ public class BasicEnum implements Serializable {
     private String type;
     @ApiModelProperty(value = "状态")
     @TableField("state")
-    private Boolean state;
+    private Integer state;
     @TableField("create_by")
     private Integer createBy;
     @TableField("create_time")
