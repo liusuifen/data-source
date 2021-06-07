@@ -151,7 +151,7 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
             contentCourse.setClockInHour(0);
             contentCourse.setClockInMinute(unVideoLearn.getEffectiveTime());
             contentCourse.setClockInSecond(0);
-            contentCourse.setPlatformOriented(String.valueOf(1));//默认1-app
+            contentCourse.setPlatformOriented("[1]");//默认1-app
             contentCourse.setUploadType(UpLoadTypeEnum.getNewByOld(unVideoLearn.getMediaType()));
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             Long userId = userMapper.getByRoleType(1);//超级管理员id
@@ -210,7 +210,10 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
                     userFavorite.setId(unVideoLearnCollect.getId());
                     userFavorite.setType(2);//课程
                     userFavorite.setUserId(intToLong(unVideoLearnCollect.getUserId()));
-                    userFavorite.setTitle("迁移");
+                    UnVideoLearn learn = unVideoLearnMapper.getById(unVideoLearnCollect.getVideoId());
+                    if(ReflectUtil.isNotNull(learn)){
+                        userFavorite.setTitle(learn.getTitle());
+                    }
                     userFavorite.setContentId(intToLong(unVideoLearnCollect.getVideoId()));
                     userFavorite.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unVideoLearnCollect.getCreateTime())));
                     DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());

@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContextAware;
 
-@MapperScan(basePackages={"com.example.mysqloracle.dao","com.example.mysqloracle.mapper"})
+@MapperScan(basePackages={"com.example.mysqloracle.dao.*","com.example.mysqloracle.mapper.*"})
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 public class MysqlOracleApplication implements CommandLineRunner, ApplicationContextAware {
 

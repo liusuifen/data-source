@@ -31,25 +31,26 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
     @Autowired
     private BasicEnumMapper basicEnumMapper;
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getGender() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getByGender();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
         }
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.COMMON.toString());
         for (Map.Entry<String, String> entry : map.entrySet()) {
+
             basicEnumMapper.updateByIds(entry.getValue(),entry.getKey());
         }
         return new CommonResult("性别类型枚举同步成功");
     }
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getIdType() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getByIdType();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -62,10 +63,10 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
     }
 
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getHolderMarriage() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getholderMarriage();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -77,10 +78,10 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
         return new CommonResult("婚姻类型枚举同步成功");
     }
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getBank() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getBank();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -93,10 +94,10 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
     }
 
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getNation() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getNation();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -108,10 +109,10 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
         return new CommonResult("国籍枚举同步成功");
     }
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getBeneficiaryIsInsured() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getBeneficiaryIsInsured();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -123,10 +124,10 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
         return new CommonResult("与保险人关系枚举同步成功");
     }
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getHasSSid() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getHasSSId();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -138,10 +139,10 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
         return new CommonResult("是否有社保枚举同步成功");
     }
 
-    @DataSourceSign(ContextConst.DataSourceType.PRIMARY)
     @Override
     public CommonResult getSourceFrom() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getSourceFrom();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -156,6 +157,7 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
     @Override
     public CommonResult getTaxType() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getTaxType();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());
@@ -170,6 +172,7 @@ public class BasicEnumServiceImpl extends ServiceImpl<BasicEnumMapper, BasicEnum
     @Override
     public CommonResult getEarningsType() {
         Map<String, String> map = new HashMap<>();
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<BasicEnumVo> byGender = basicEnumMapper.getEarningsType();
         for (BasicEnumVo basicEnumVo : byGender) {
             map.put(basicEnumVo.getId(),basicEnumVo.getNewValue());

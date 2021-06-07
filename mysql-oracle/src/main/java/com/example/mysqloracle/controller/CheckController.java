@@ -135,14 +135,18 @@ public class CheckController {
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
         Integer adminPolicyNum = partnerLifePolicyMapper.selectByChannelId(partnerId);
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy】保单表总数",adminPolicyNum);
+        log.info("保单数量：老系统:{},新系统合作方:{},新系统保联:{}",oldMainNum,newPolicyNum,adminPolicyNum);
 
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         Integer newHolderNum = lifePolicyHolderMapper.selectByChannelId();
         map.put("合作方"+param.getChannelId()+"-新系统环境合作方【life_policy_holder】投保人表总数",newHolderNum);
 
+
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
         Integer adminHolderNum = partnerLifePolicyHolderMapper.selectByChannelId(partnerId);
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_holder】投保人表总数",adminHolderNum);
+
+        log.info("投保人数量：老系统:{},新系统合作方:{},新系统保联:{}",oldMainNum,newHolderNum,adminHolderNum);
 
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         Integer oldInsureNum = unLifeInsInsuredMapper.selectByChannelId(param.getChannelId());
@@ -156,6 +160,8 @@ public class CheckController {
         Integer adminInsuredNum = partnerLifePolicyInsuredMapper.selectByChannelId(partnerId);
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_insured】被保人表总数",adminInsuredNum);
 
+        log.info("被保人数量：老系统:{},新系统合作方:{},新系统保联:{}",oldInsureNum,newInsuredNum,adminInsuredNum);
+
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         Integer oldBeneficiaryNum = unLifeInsBeneficiaryMapper.selectByChannelId(param.getChannelId());
         map.put("合作方"+param.getChannelId()+"-老系统环境【un_life_ins_beneficiary】受益人表总数",oldBeneficiaryNum);
@@ -166,7 +172,9 @@ public class CheckController {
 
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
         Integer adminBeneficiaryNum = partnerLifePolicyBeneficiaryMapper.selectByChannelId(partnerId);
-        map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_beneficiaryd】被保人表总数",adminBeneficiaryNum);
+        map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_beneficiaryd】受益人表总数",adminBeneficiaryNum);
+
+        log.info("受益人数量：老系统:{},新系统合作方:{},新系统保联:{}",oldBeneficiaryNum,newBeneficiaryNum,adminBeneficiaryNum);
 
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         Integer oldContentNum = unLifeInsContentMapper.selectByChannelId(param.getChannelId());
@@ -180,6 +188,8 @@ public class CheckController {
         Integer adminProductNum = partnerLifePolicyProductMapper.selectByChannelId(partnerId);
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_product】产品表总数",adminProductNum);
 
+        log.info("产品表数量：老系统:{},新系统合作方:{},新系统保联:{}",oldContentNum,newProductNum,adminProductNum);
+
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         Integer oldStateNum = unLifeInsStateMapper.selectByChannelId(param.getChannelId());
         map.put("合作方"+param.getChannelId()+"-老系统环境【un_life_ins_state】进度表总数",oldStateNum);
@@ -192,6 +202,8 @@ public class CheckController {
         Integer adminProgressNum = partnerLifePolicyProgressMapper.selectByChannelId(partnerId);
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_progress】进度表总数",adminProgressNum);
 
+        log.info("进度表数量：老系统:{},新系统合作方:{},新系统保联:{}",oldStateNum,newProgressNum,adminProgressNum);
+
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         Integer newStatusNum = lifePolicyStatusMapper.selectByChannelId();
         map.put("合作方"+param.getChannelId()+"-新系统环境合作方【life_policy_status】状态表总数",newStatusNum);
@@ -200,6 +212,8 @@ public class CheckController {
         Integer adminStatusNum = partnerLifePolicyStatusMapper.selectByChannelId(partnerId);
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_status】状态表总数",adminStatusNum);
 
+        log.info("状态数量：新系统合作方:{},新系统保联:{}",newStatusNum,adminStatusNum);
+
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         Integer newDocumentNum = lifePolicyDocumentMapper.selectByChannelId();
         map.put("合作方"+param.getChannelId()+"-新系统环境合作方【life_policy_document】文档表总数",newDocumentNum);
@@ -207,6 +221,8 @@ public class CheckController {
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.ADMIN.toString());
         Integer adminDocumentNum = partnerLifePolicyDocumentMapper.selectByChannelId(partnerId);
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_product】文档表总数",adminDocumentNum);
+
+        log.info("文档数量：新系统合作方:{},新系统保联:{}",newDocumentNum,adminDocumentNum);
         return new CommonResult(map);
     }
 
