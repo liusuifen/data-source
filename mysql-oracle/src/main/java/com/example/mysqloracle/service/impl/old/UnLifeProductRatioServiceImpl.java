@@ -84,6 +84,12 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
                     if(code!=null){
                         lifeProductRatioTemplate.setName("JZY_"+code+"_"+unLifeProductRatio.getArea());
                     }
+                }else if(param.getChannelId()== PartnerEnum.channelId_众康.getChannelId()){
+                    DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+                    String code = unLifeProductAllMapper.getCodeById(unLifeProductRatio.getProductId());
+                    if(code!=null){
+                        lifeProductRatioTemplate.setName("ZK_"+code+"_"+unLifeProductRatio.getArea());
+                    }
                 }
                 DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
                 lifeProductRatioTemplateMapper.insert(lifeProductRatioTemplate);

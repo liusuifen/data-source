@@ -25,7 +25,7 @@ public interface SystemRankMapper extends BaseMapper<SystemRank> {
     SystemRank getById(@Param("id")Long id);
 
 
-    @Select("select id from system_rank where `status`=2 and is_deleted=0 ")
+    @Select("select id from system_rank where `status`=2 and is_deleted=0 and type=2 ")
     List<Long> getAllID();
 
 }

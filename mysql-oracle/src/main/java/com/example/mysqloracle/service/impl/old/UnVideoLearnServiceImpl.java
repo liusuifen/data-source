@@ -22,6 +22,7 @@ import com.example.mysqloracle.param.Param;
 import com.example.mysqloracle.service.old.UnVideoLearnService;
 import com.example.mysqloracle.util.DateUtil;
 import com.example.mysqloracle.util.IdUtil;
+import com.example.mysqloracle.util.ProPertiesUtil;
 import com.example.mysqloracle.util.ReflectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +120,8 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
             ContentCourse contentCourse = new ContentCourse();
             contentCourse.setId(intToLong(unVideoLearn.getId()));
             contentCourse.setContentCourseTypeId(intToLong(unVideoLearn.getType()));
-            contentCourse.setCover(unVideoLearn.getImg());
+            String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
+            contentCourse.setCover(value+unVideoLearn.getImg());
             contentCourse.setTitle(unVideoLearn.getTitle());
             contentCourse.setAuthor(PartnerNameEnum.getPartnerNameByChannelId(param.getChannelId()));//填写总公司名称
             contentCourse.setIntroduction(unVideoLearn.getIntroduction());
@@ -132,8 +134,7 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
             contentCourse.setReceiveOrg(orgJoin);
             contentCourse.setParentOrg("[]");
             contentCourse.setTotalOrg(orgJoin);
-            contentCourse.setIsShare(1);//默认为1：可学
-
+            contentCourse.setIsShare(unVideoLearn.getIsPublic());//默认为1：可分享
             String rankJoin = "[]";
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             List<Long> rankId = systemRankMapper.getAllID();
@@ -144,7 +145,11 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
             contentCourse.setIsLearn(0);//默认为1：可学
             contentCourse.setReceiveChannel("[]");//默认为空
             contentCourse.setIsVisible(0);//默认为1：是
-            contentCourse.setStatus(unVideoLearn.getState());
+            if(unVideoLearn.getState()==1){
+                contentCourse.setStatus(1);
+            }else {
+                contentCourse.setStatus(2);
+            }
             if(!"".equals(unVideoLearn.getDate())){
                 contentCourse.setAttendanceTime(DateUtil.strToLocalDate(unVideoLearn.getDate()));
             }
@@ -153,6 +158,9 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
             contentCourse.setClockInSecond(0);
             contentCourse.setPlatformOriented("[1]");//默认1-app
             contentCourse.setUploadType(UpLoadTypeEnum.getNewByOld(unVideoLearn.getMediaType()));
+            if(unVideoLearn.getDesc()!=null && !"".equals(unVideoLearn.getDesc())){
+                contentCourse.setUploadType(UpLoadTypeEnum.UP_LOAD_TYPE_无媒体.getNews());
+            }
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             Long userId = userMapper.getByRoleType(1);//超级管理员id
             if (userId == null) {
@@ -182,14 +190,17 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
             ContentCourse contentCourse = contentCourseMapper.getById(intToLong(unVideoLearn.getId()));
             if (ReflectUtil.isNotNull(contentCourse)) {
                 contentCourseInfo.setContentCourseId(contentCourse.getId());
+                if(contentCourse.getUploadType()==UpLoadTypeEnum.UP_LOAD_TYPE_无媒体.getNews()){
+                    contentCourseInfo.setRemark(unVideoLearn.getDesc());
+                }else {
+                    contentCourseInfo.setRemark("");
+                }
             }
-
             contentCourseInfo.setUrl(unVideoLearn.getMediaUrl());
             contentCourseInfo.setLinkUrl("");
             contentCourseInfo.setFileName("");
-            contentCourseInfo.setRemark("");
             contentCourseInfo.setUserId(intToLong(unVideoLearn.getCreateBy()));
-            contentCourseInfo.setIsDeleted(1);
+            contentCourseInfo.setIsDeleted(0);//未删除
             contentCourseInfo.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unVideoLearn.getCreateTime())));
             contentCourseInfo.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unVideoLearn.getModifyTime())));
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
@@ -210,6 +221,7 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
                     userFavorite.setId(unVideoLearnCollect.getId());
                     userFavorite.setType(2);//课程
                     userFavorite.setUserId(intToLong(unVideoLearnCollect.getUserId()));
+                    DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
                     UnVideoLearn learn = unVideoLearnMapper.getById(unVideoLearnCollect.getVideoId());
                     if(ReflectUtil.isNotNull(learn)){
                         userFavorite.setTitle(learn.getTitle());

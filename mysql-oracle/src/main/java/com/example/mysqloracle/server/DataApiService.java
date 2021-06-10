@@ -215,11 +215,12 @@ public class DataApiService {
                 }else{
                     lifeProductVo.setIs_long_term("");
                 }
-                if(data.getStatus()!=null){
-                    lifeProductVo.setStatus(data.getStatus().toString());
-                }else {
-                    lifeProductVo.setStatus("");
-                }
+//                if(data.getStatus()!=null){
+//                    lifeProductVo.setStatus(data.getStatus().toString());
+//                }else {
+//                    lifeProductVo.setStatus("");
+//                }
+                lifeProductVo.setStatus("2");//可售卖状态
                 lifeProductVo.setCommission_type("1");
                 lifeProductVo.setAllow_age("0周岁-60周岁");
                 if(data.getIsSaleOnline()!=null){

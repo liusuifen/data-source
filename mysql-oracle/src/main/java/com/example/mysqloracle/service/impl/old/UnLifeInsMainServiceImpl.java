@@ -203,11 +203,11 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         List<Integer> successful = migrationLogMapper.getSuccessPolicy(intToLong(param.getChannelId()));
         for (Integer policyId : successful) {
-            try {
+//            try {
                 createCustomerData(policyId);
-            } catch (Exception e) {
-                log.info("根据保单和投保人生成客户数据失败，保单号id{}", policyId);
-            }
+//            } catch (Exception e) {
+//                log.info("根据保单和投保人生成客户数据失败，保单号id{}", policyId);
+//            }
         }
         return new CommonResult("根据保单和投保人生成客户数据成功");
     }
@@ -467,14 +467,15 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                     policyProgress.setResult(1);//默认成功
                     policyProgress.setDate(DateUtil.convertTimeToLocalDate(intToLong(unLifeInsState.getFileTime())));
                     String oldPicture = unLifeInsState.getPicture();
+                    String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
                     if (oldPicture != null && !"".equals(oldPicture)) {
                         String[] split = oldPicture.split(",");
                         String firstLetter = Character.toString(oldPicture.charAt(0));
                         if ("".equals(firstLetter)) {
                             //获取老系统进度表中字符串第一个字符,，如果以第一个字符为,
-                            policyProgress.setFile(split[1]);
+                            policyProgress.setFile(value+split[1]);
                         } else {
-                            policyProgress.setFile(split[0]);
+                            policyProgress.setFile(value+split[0]);
                         }
                         policyProgress.setFileUrls("{" + oldPicture + "}");
                     } else {
