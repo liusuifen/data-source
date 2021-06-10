@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<h2>
+  通过ThymeLeaf发送html邮件
+</h2>
+<table border="1">
+  <tr>
+    <td>用户名</td>
+    <!--使用th,html标签内要导入xmlns:th="http://www.thymeleaf.org"-->
+    <td th:text="${username}"></td>
+  </tr>
+  <tr>
+    <td>年龄</td>
+    <td th:text="${age}"></td>
+  </tr>
+</table>
+
+<div>
+  这是一张图片:
+</div>
+<div>
+  <img src="C:\Users\bl007\IdeaProjects\data-source\mysql-oracle\src\main\resources\static\2.jpg"/>
+</div>
+</body>
+</html>
