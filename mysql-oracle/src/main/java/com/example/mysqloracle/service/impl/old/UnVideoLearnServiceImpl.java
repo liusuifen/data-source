@@ -20,10 +20,7 @@ import com.example.mysqloracle.enums.PartnerNameEnum;
 import com.example.mysqloracle.enums.UpLoadTypeEnum;
 import com.example.mysqloracle.param.Param;
 import com.example.mysqloracle.service.old.UnVideoLearnService;
-import com.example.mysqloracle.util.DateUtil;
-import com.example.mysqloracle.util.IdUtil;
-import com.example.mysqloracle.util.ProPertiesUtil;
-import com.example.mysqloracle.util.ReflectUtil;
+import com.example.mysqloracle.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -191,7 +188,7 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
             if (ReflectUtil.isNotNull(contentCourse)) {
                 contentCourseInfo.setContentCourseId(contentCourse.getId());
                 if(contentCourse.getUploadType()==UpLoadTypeEnum.UP_LOAD_TYPE_无媒体.getNews()){
-                    contentCourseInfo.setRemark(unVideoLearn.getDesc());
+                    contentCourseInfo.setRemark(HtmlUtil.replaceHtmlTag(unVideoLearn.getDesc(),"img", "src", "src=\"https://pro-unions.oss-cn-shenzhen.aliyuncs.com", "\""));
                 }else {
                     contentCourseInfo.setRemark("");
                 }

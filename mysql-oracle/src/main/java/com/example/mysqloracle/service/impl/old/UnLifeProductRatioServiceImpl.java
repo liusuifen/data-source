@@ -64,7 +64,12 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
 
     public CommonResult saveTemplate(Param param){
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
-        List<UnLifeProductRatio> ratioByGroup = unLifeProductRatioMapper.getByGroup(param.getChannelId());
+        List<UnLifeProductRatio> ratioByGroup;
+        if(param.getChannelId()==27){
+             ratioByGroup = unLifeProductRatioMapper.getByGroup2(param.getChannelId());
+        }else {
+             ratioByGroup = unLifeProductRatioMapper.getByGroup(param.getChannelId());
+        }
         for (UnLifeProductRatio unLifeProductRatio : ratioByGroup) {
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             Long newsLifeProductId = getNewsLifeProductId(unLifeProductRatio.getProductId());
@@ -104,7 +109,12 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
     @Override
     public  CommonResult getRateData(Param param) {
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
-        List<UnLifeProductRatio> productRatioList = unLifeProductRatioMapper.getByChannelId(param.getChannelId());
+        List<UnLifeProductRatio> productRatioList;
+        if(param.getChannelId()==27){
+             productRatioList = unLifeProductRatioMapper.getByChannelId2(param.getChannelId());
+        }else {
+             productRatioList = unLifeProductRatioMapper.getByChannelId(param.getChannelId());
+        }
         for (UnLifeProductRatio ratio : productRatioList) {
 //            try{
                 saveProductRatio(ratio,param);

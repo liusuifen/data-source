@@ -1,5 +1,7 @@
 package com.example.mysqloracle.controller;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import com.example.mysqloracle.common.CommonResult;
 import com.example.mysqloracle.common.ContextConst;
 import com.example.mysqloracle.datasource.DataSourceContextHolder;
@@ -44,6 +46,7 @@ public class MailSenderController {
 
     @PostMapping("/sender")
     public CommonResult sender(@RequestBody Param param){
+        TimeInterval timer = DateUtil.timer();
         if(param.getChannelId()==1){
             mailService.sendSimpleMail(mailFrom, "blueSky", mailTo, cc, "TestMail", "普通邮件测试,Hello World !");
         }else if(param.getChannelId()==2){
@@ -67,6 +70,10 @@ public class MailSenderController {
             String content = templateEngine.process("mailTemplate01.html", context);
             mailService.sendHtmlMailThymeLeaf(mailFrom, "blueSky", mailTo, cc, "ThymeLeaf测试 TestMail", content);
         }
+        long restart = timer.intervalRestart();
+        log.info("重置接口耗时：{}ms",restart);
+        long interval = timer.interval();
+        log.info("接口花费时间：{}ms",interval);
         return new CommonResult("邮件发送成功");
     }
 

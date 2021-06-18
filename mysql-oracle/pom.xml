@@ -94,6 +94,12 @@
         </dependency>
 
         <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.6.7</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>3.8.1</version>
@@ -139,6 +145,10 @@
             <groupId>com.ctrip.framework.apollo</groupId>
             <artifactId>apollo-core</artifactId>
             <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
         </dependency>
 
     </dependencies>

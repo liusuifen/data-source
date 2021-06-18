@@ -68,7 +68,12 @@ public class UnVideoCategoryServiceImpl extends ServiceImpl<UnVideoCategoryMappe
             contentCourseType.setId(intToLong(unVideoCategory.getId()));
             contentCourseType.setName(unVideoCategory.getName());
             contentCourseType.setSort(unVideoCategory.getSort());
-            contentCourseType.setStatus(unVideoCategory.getState());
+            if(unVideoCategory.getState()==0){
+                contentCourseType.setStatus(2);//禁用
+            }else {
+                contentCourseType.setStatus(unVideoCategory.getState());
+            }
+
             if("每日一课".equals(unVideoCategory.getName())){
                 contentCourseType.setIsLesson(1);
             }else {

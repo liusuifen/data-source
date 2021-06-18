@@ -1,6 +1,9 @@
 package com.example.mysqloracle.service.impl.old;
 
 
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.util.CharsetUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.example.mysqloracle.common.CommonResult;
@@ -469,14 +472,22 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                     String oldPicture = unLifeInsState.getPicture();
                     String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
                     if (oldPicture != null && !"".equals(oldPicture)) {
-                        String[] split = oldPicture.split(",");
-                        String firstLetter = Character.toString(oldPicture.charAt(0));
-                        if ("".equals(firstLetter)) {
-                            //获取老系统进度表中字符串第一个字符,，如果以第一个字符为,
-                            policyProgress.setFile(value+split[1]);
-                        } else {
-                            policyProgress.setFile(value+split[0]);
-                        }
+//                        String[] split = oldPicture.split(",");
+//                        String firstLetter = Character.toString(oldPicture.charAt(0));
+//                        if ("".equals(firstLetter)) {//以,开头
+//                            //获取老系统进度表中字符串第一个字符,，如果以第一个字符为,
+//                            List<String> convert = Convert.convert(List.class, split);
+//                            String file="";
+//                            for (String s : convert) {
+//                                file=value+s+"|";
+//                            }
+//                            policyProgress.setFile(file);
+//                            policyProgress.setFile(value+split[1]);
+//                        } else {
+//                            policyProgress.setFile(value+split[0]);
+//                        }
+                        String pic = updateOldpicture(unLifeInsState.getPicture());
+                        policyProgress.setFile(pic);
                         policyProgress.setFileUrls("{" + oldPicture + "}");
                     } else {
                         policyProgress.setFile("");
@@ -1077,6 +1088,32 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
         }
     }
 
+
+    public String updateOldpicture(String oldPicture){
+        String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
+        String[] split = oldPicture.split(",");
+        String firstLetter = Character.toString(oldPicture.charAt(0));
+        if (",".equals(firstLetter)) {//以,开头
+            String filePicture=oldPicture.substring(1,oldPicture.length());
+            String[] split1 = filePicture.split(",");
+            //获取老系统进度表中字符串第一个字符,，如果以第一个字符为,
+            List<String> convert = Convert.convert(List.class, split1);
+            String file = "";
+            for (String s : convert) {
+                file += value + s + "|";
+            }
+            return file.substring(0,file.length()-1);
+        }else {
+            //获取老系统进度表中字符串第一个字符,，如果以第一个字符为,
+            List<String> convert = Convert.convert(List.class, split);
+            String file = "";
+            for (String s : convert) {
+                file += value + s + "|";
+            }
+            return file.substring(0,file.length()-1);
+        }
+    }
+
     /**
      * 根据一个机构id查询level3机构
      * @param id
@@ -1106,7 +1143,10 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
     }
 
     public static void main(String[] args) {
-        String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
-        System.out.println(value);
+        String a = "我不是乱码";
+//转换后result为乱码
+        String result = Convert.convertCharset(a, CharsetUtil.UTF_8, CharsetUtil.ISO_8859_1);
+        String raw = Convert.convertCharset(result, CharsetUtil.ISO_8859_1, "UTF-8");
+        System.out.println(result+"--"+raw);
     }
 }
