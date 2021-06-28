@@ -35,4 +35,7 @@ public interface UnVideoLearnMapper extends BaseMapper<UnVideoLearn> {
             "sign_img as signImg, sign_text as signText, qr_code_text as qrCodeText from un_video_learn where id=#{id} " +
             "and delete_time is null ")
     UnVideoLearn getById(@Param("id") Integer id);
+
+    @Select("Select name from un_video_category where channel_id=#{channelId} and id =#{id} and delete_time is null")
+    String getCategoryName(@Param("id") Integer id,@Param("channelId") Integer channelId);
 }

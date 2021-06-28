@@ -21,4 +21,11 @@ public interface ContentCourseTypeMapper extends BaseMapper<ContentCourseType> {
     @Select("select count(*) from content_course_type where id=#{id}")
     Integer getById(@Param("id") Long id);
 
+    @Select("select count(*) from content_course_type where name=#{name}")
+    Integer getByName(@Param("name") String name);
+
+
+    @Select("select id from content_course_type where name=#{name}")
+    Integer getByCategoryName(@Param("name") String name);
+
 }

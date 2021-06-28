@@ -66,6 +66,9 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
     private UserFavoriteMapper userFavoriteMapper;
 
     @Autowired
+    private ContentCourseTypeMapper contentCourseTypeMapper;
+
+    @Autowired
     private UnVideoLearnCollectMapper  unVideoLearnCollectMapper;
 
 
@@ -116,7 +119,17 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
         if (num == 0) {
             ContentCourse contentCourse = new ContentCourse();
             contentCourse.setId(intToLong(unVideoLearn.getId()));
-            contentCourse.setContentCourseTypeId(intToLong(unVideoLearn.getType()));
+            DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+            String categoryName = unVideoLearnMapper.getCategoryName(unVideoLearn.getType(), param.getChannelId());
+            if(categoryName!=null){
+                DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
+                Integer categoryId = contentCourseTypeMapper.getByCategoryName(categoryName);
+                if(categoryId!=null){
+                    contentCourse.setContentCourseTypeId(intToLong(categoryId));
+                }
+            }else {
+                contentCourse.setContentCourseTypeId(intToLong(unVideoLearn.getType()));
+            }
             String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
             contentCourse.setCover(value+unVideoLearn.getImg());
             contentCourse.setTitle(unVideoLearn.getTitle());

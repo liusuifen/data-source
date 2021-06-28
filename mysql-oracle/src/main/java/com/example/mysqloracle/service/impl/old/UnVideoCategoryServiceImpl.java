@@ -62,7 +62,7 @@ public class UnVideoCategoryServiceImpl extends ServiceImpl<UnVideoCategoryMappe
 
     public void saveCateGory(UnVideoCategory unVideoCategory){
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-        Integer num = contentCourseTypeMapper.getById(intToLong(unVideoCategory.getId()));
+        Integer num = contentCourseTypeMapper.getByName(unVideoCategory.getName());
         if(num==0){
             ContentCourseType contentCourseType = new ContentCourseType();
             contentCourseType.setId(intToLong(unVideoCategory.getId()));
