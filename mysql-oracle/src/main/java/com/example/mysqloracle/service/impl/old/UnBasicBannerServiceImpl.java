@@ -22,6 +22,7 @@ import com.example.mysqloracle.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -131,7 +132,7 @@ public class UnBasicBannerServiceImpl extends ServiceImpl<UnBasicBannerMapper, U
                         contentAd.setPublishEnd(DateUtil.strToLocalDate("2021-12-31"));
                         contentAd.setPublishStart(DateUtil.strToLocalDate("2021-01-01"));
                         String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
-                        contentAd.setPic(value+unBasicBanner.getImage());
+                        contentAd.setPic(value + unBasicBanner.getImage());
                         contentAd.setUrl(unBasicBanner.getLink());
                         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
                         contentAdMapper.insert(contentAd);
@@ -147,7 +148,7 @@ public class UnBasicBannerServiceImpl extends ServiceImpl<UnBasicBannerMapper, U
                 for (UnBasicBanner unBasicBanner : list) {
                     Img img = new Img();
                     img.setId(IdUtil.generateId());
-                    img.setUrl(value+unBasicBanner.getImage());
+                    img.setUrl(value + unBasicBanner.getImage());
                     imgList.add(img);
                 }
                 String item = JsonUtils.objectToJson(imgList);
@@ -168,10 +169,27 @@ public class UnBasicBannerServiceImpl extends ServiceImpl<UnBasicBannerMapper, U
 //            insertMigrationLog(contentPoster.getId(),MigrationStatusEnum.MIGRATION_STATUS_SUCCESS.getCode(),param);
             }
         } else {
-            log.info("该海报数据已经迁移过，海报id:{}，忽略", contentPoster.getId());
+            List<Img> imgList = JsonUtils.jsonToList(contentPoster.getItem(), Img.class);
+            String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
+            List<String> imgUrl = new ArrayList<>();
+            for (Img img : imgList) {
+                imgUrl.add(img.getUrl());
+            }
+            for (UnBasicBanner unBasicBanner : list) {
+                String imageurl = value + unBasicBanner.getImage();
+                if (!imgUrl.contains(imageurl)) {
+                    Img img = new Img();
+                    img.setId(IdUtil.generateId());
+                    img.setUrl(value + unBasicBanner.getImage());
+                    imgList.add(img);
+                }
+            }
+            String item = JsonUtils.objectToJson(imgList);
+            contentPoster.setItem(item);
+            contentPosterMapper.updateById(contentPoster);
+            log.info("该海报数据更新成功", contentPoster.getId());
         }
-
-    }
+}
 
 
     public void insertMigrationLog(Long id, Integer status, Param param) {

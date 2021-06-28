@@ -44,9 +44,6 @@ public class LifePolicyProgress implements Serializable {
     @ApiModelProperty(value = "影像资料上传地址")
     @TableField("file")
     private String file;
-    @ApiModelProperty(value = "迁移影像资料上传地址")
-    @TableField("file_urls")
-    private String fileUrls;
     @ApiModelProperty(value = "备注")
     @TableField("remark")
     private String remark;

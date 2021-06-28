@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -104,6 +105,9 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private LifePolicyService lifePolicyService;
@@ -434,7 +438,8 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                             lifePolicyDocument.setLifePolicyId(oldId);
                             lifePolicyDocument.setName("客户告知书");
                             lifePolicyDocument.setUrl(url);
-                            lifePolicyDocument.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getCreateTime())));
+//                            lifePolicyDocument.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getCreateTime())));
+                            lifePolicyDocument.setCreatedAt(getUploadTime(context));
                             lifePolicyDocument.setType("106");//客户告知书状态
                             lifePolicyDocument.setIsDeleted(0);
                             lifePolicyDocumentMapper.insert(lifePolicyDocument);
@@ -488,10 +493,10 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
 //                        }
                         String pic = updateOldpicture(unLifeInsState.getPicture());
                         policyProgress.setFile(pic);
-                        policyProgress.setFileUrls("{" + oldPicture + "}");
+//                        policyProgress.setFileUrls("{" + oldPicture + "}");
                     } else {
                         policyProgress.setFile("");
-                        policyProgress.setFileUrls("{}");
+//                        policyProgress.setFileUrls("{}");
                     }
 //                    policyProgress.setRemark("");//默认为空字符串
                     policyProgress.setUpdateUser("{}");//默认为空字符串
@@ -667,6 +672,7 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                         lifePolicyProduct.setPayFrequency(1);//默认为1
                         lifePolicyProduct.setFee(unLifeInsContent.getFee());
                         lifePolicyProduct.setStdFee(unLifeInsContent.getStdPremium());
+                        lifePolicyProduct.setCompanyStdFee(unLifeInsContent.getStdPremium());
                         stdFeeSum = stdFeeSum.add(unLifeInsContent.getStdPremium());
                         amountSum = amountSum.add(unLifeInsContent.getAmount());
                         lifePolicyProduct.setRatio(unLifeInsContent.getRatio());
@@ -874,6 +880,7 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
 //            policy.setProductJson();//不处理
             policy.setFee(unLifeInsMain.getTotal());
             policy.setStdFee(stdFeeSum);
+            policy.setCompanyStdFee(stdFeeSum);
             if (processResult.contains(policy.getProgress())) {
                 policy.setProgressResult(Integer.valueOf(policy.getProgress() + "1"));
             } else {
@@ -889,21 +896,28 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
             policy.setImportUserId(intToLong(unLifeInsMain.getUserId()));
 //            policy.setSalesUserJson();//不处理
             policy.setSalesUserId(intToLong(unLifeInsMain.getUserId()));
-            DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
-            UnHrDept unHrDept = unHrDeptMapper.getById(unLifeInsMain.getSalesDept());
-            if (ReflectUtil.isNotNull(unHrDept)) {
-                if (unHrDept.getLevel() == 4) {
-                    UnHrDept level3Dept = getLevel123Dept(unHrDept.getPid());
-                    if(ReflectUtil.isNotNull(level3Dept)){
-                        policy.setSalesUserOrgId(intToLong(level3Dept.getId()));
+            if(param.getChannelId()==22){
+                DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+                UnHrDept unHrDept = unHrDeptMapper.getById(unLifeInsMain.getSalesDept());
+                if (ReflectUtil.isNotNull(unHrDept)) {
+                    if (unHrDept.getLevel() == 4) {
+                        UnHrDept level3Dept = getLevel123Dept(unHrDept.getPid());
+                        if(ReflectUtil.isNotNull(level3Dept)){
+                            policy.setSalesUserOrgId(intToLong(level3Dept.getId()));
+                        }
+                    } else {
+                        policy.setSalesUserOrgId(intToLong(unLifeInsMain.getSalesDept()));
                     }
-
-                } else {
-                    policy.setSalesUserOrgId(intToLong(unLifeInsMain.getSalesDept()));
                 }
-            }
-            if (!"0".equals(unLifeInsMain.getRankId())) {
-                policy.setSalesUserRankId(Long.valueOf(unLifeInsMain.getRankId()));
+                if (!"0".equals(unLifeInsMain.getRankId())) {
+                    policy.setSalesUserRankId(Long.valueOf(unLifeInsMain.getRankId()));
+                }
+            }else if(param.getChannelId()==27){
+                User user = userMapper.getById(intToLong(unLifeInsMain.getUserId()));
+                if(ReflectUtil.isNotNull(user)){
+                    policy.setSalesUserOrgId(user.getOrgId());
+                    policy.setSalesUserRankId(user.getJobRank());
+                }
             }
             policy.setIsPartner(1);//默认是
             policy.setChangeType(1);//默认1
@@ -1142,11 +1156,21 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
         return birthday;
     }
 
+    public LocalDateTime getUploadTime(String str){
+        String s = str.substring(str.length() - 18, str.length() - 4);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime ldt = LocalDateTime.parse(s,dtf);
+        return ldt;
+    }
+
     public static void main(String[] args) {
-        String a = "我不是乱码";
-//转换后result为乱码
-        String result = Convert.convertCharset(a, CharsetUtil.UTF_8, CharsetUtil.ISO_8859_1);
-        String raw = Convert.convertCharset(result, CharsetUtil.ISO_8859_1, "UTF-8");
-        System.out.println(result+"--"+raw);
+        String str="{\"customer_notification\":\"\\/static\\/file\\/ins\\/custom\\/SZ23297068620190313095735.pdf\"}";
+        JSONObject jsonObject = JSONObject.parseObject(str);
+
+        String context = jsonObject.get("customer_notification").toString();
+        String s = context.substring(context.length() - 18, context.length() - 4);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime ldt = LocalDateTime.parse(s,dtf);
+        System.out.println(ldt);
     }
 }

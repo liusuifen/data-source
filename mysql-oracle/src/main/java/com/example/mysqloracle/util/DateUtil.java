@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -320,23 +321,45 @@ public class DateUtil {
         }
     }
 
-    public static void main(String[] args) {
-        String startDate = "2020-09-03";
-        String endDate = "2021-05-12";
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        int startDay = 0;
-        int endDay = 0;
-        try {
-            Date dateStart = format.parse(startDate);
-            Date datEnd = format.parse(endDate);
 
-            startDay = (int) (dateStart.getTime() / 1000);
-            endDay = (int) (datEnd.getTime() / 1000);
-        } catch (Exception e) {
-            e.printStackTrace();
+    /**
+     * 判断当前时间是否在[startTime, endTime]区间，注意时间格式要一致
+     *
+     * @param nowTime 当前时间
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @return
+     * @author jqlin
+     */
+    public static boolean isEffectiveDate(Date nowTime, Date startTime, Date endTime) {
+        if (nowTime.getTime() == startTime.getTime()
+                || nowTime.getTime() == endTime.getTime()) {
+            return true;
         }
-        System.err.println(startDay);
-        System.err.println(endDay);
+        Calendar date = Calendar.getInstance();
+        date.setTime(nowTime);
+
+        Calendar begin = Calendar.getInstance();
+        begin.setTime(startTime);
+
+        Calendar end = Calendar.getInstance();
+        end.setTime(endTime);
+
+        if (date.after(begin) && date.before(end)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static void main(String[] args) {
+        Date date1=localDateToDate(LocalDate.parse("2021-03-01"));
+        Date date2=localDateToDate(LocalDate.parse("2021-06-24"));
+        Date date3=localDateToDate(LocalDate.now());
+        System.out.println(date1);
+        System.out.println(date2);
+        System.out.println(date3);
+        boolean effectiveDate = isEffectiveDate(date3, date1, date2);
+        System.out.println(effectiveDate);
 
     }
 

@@ -138,6 +138,9 @@ public class LifePolicy implements Serializable {
     @ApiModelProperty(value = "标准保费")
     @TableField("std_fee")
     private BigDecimal stdFee;
+    @ApiModelProperty(value = "公司标保")
+    @TableField("company_std_fee")
+    private BigDecimal companyStdFee;
     @ApiModelProperty(value = "承保进度结果")
     @TableField("progress_result")
     private Integer progressResult;
