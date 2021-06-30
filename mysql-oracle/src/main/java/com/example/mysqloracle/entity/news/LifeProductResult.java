@@ -30,7 +30,9 @@ public class LifeProductResult implements Serializable {
     @JsonProperty("type")
     private Integer type;
     @JsonProperty("company_id")
-    private Integer companyId;
+    private Long companyId;
+//    @JsonProperty("company_id")
+//    private Integer companyId;
     @JsonProperty("code")
     private String code;
     @JsonProperty("code_api")

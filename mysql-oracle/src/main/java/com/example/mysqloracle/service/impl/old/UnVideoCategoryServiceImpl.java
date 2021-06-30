@@ -47,9 +47,15 @@ public class UnVideoCategoryServiceImpl extends ServiceImpl<UnVideoCategoryMappe
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<UnVideoCategory> allCategory = unVideoCategoryMapper.getAllCategory(param.getChannelId());
         if(!CollectionUtils.isEmpty(allCategory)){
+            DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
+            Integer sort=contentCourseTypeMapper.getSort();
+            if(sort!=null){
+                sort=sort+1;
+            }
             for (UnVideoCategory unVideoCategory : allCategory) {
 //                try {
-                    saveCateGory(unVideoCategory);
+                    saveCateGory(unVideoCategory,sort);
+                    sort++;
 //                }catch (Exception e){
 //
 //                }
@@ -60,14 +66,14 @@ public class UnVideoCategoryServiceImpl extends ServiceImpl<UnVideoCategoryMappe
     }
 
 
-    public void saveCateGory(UnVideoCategory unVideoCategory){
+    public void saveCateGory(UnVideoCategory unVideoCategory,Integer sort){
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         Integer num = contentCourseTypeMapper.getByName(unVideoCategory.getName());
         if(num==0){
             ContentCourseType contentCourseType = new ContentCourseType();
             contentCourseType.setId(intToLong(unVideoCategory.getId()));
             contentCourseType.setName(unVideoCategory.getName());
-            contentCourseType.setSort(unVideoCategory.getSort());
+            contentCourseType.setSort(sort);
             if(unVideoCategory.getState()==0){
                 contentCourseType.setStatus(2);//禁用
             }else {

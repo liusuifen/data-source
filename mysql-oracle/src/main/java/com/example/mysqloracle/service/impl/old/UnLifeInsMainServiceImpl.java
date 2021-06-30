@@ -12,6 +12,7 @@ import com.example.mysqloracle.common.ContextConst;
 import com.example.mysqloracle.dao.news.*;
 import com.example.mysqloracle.dao.old.UnHrDeptMapper;
 import com.example.mysqloracle.dao.old.UnLifeInsMainMapper;
+import com.example.mysqloracle.dao.old.UnLifeInsStateMapper;
 import com.example.mysqloracle.datasource.DataSourceContextHolder;
 import com.example.mysqloracle.entity.news.*;
 import com.example.mysqloracle.entity.old.*;
@@ -59,6 +60,9 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
 
     @Autowired
     private UnLifeInsMainMapper unLifeInsMainMapper;
+
+    @Autowired
+    private UnLifeInsStateMapper unLifeInsStateMapper;
 
     @Autowired
     private Config config;
@@ -154,13 +158,13 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
     @Override
     public CommonResult getAll(Param param) {
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
-        List<UnLifeInsMain> all = unLifeInsMainMapper.getAll(param.getChannelId(), DateUtil.strToInteger(param.getStartDate()), DateUtil.strToInteger(param.getEndDate()));
+        List<UnLifeInsMain> all=unLifeInsMainMapper.getAll(param.getChannelId(), DateUtil.strToInteger(param.getStartDate()), DateUtil.strToInteger(param.getEndDate()));
         for (UnLifeInsMain unLifeInsMain : all) {
-            try {
+//            try {
                 saveNewPartner(unLifeInsMain, param);
-            } catch (Exception e) {
-                insertMigrationLog(intToLong(unLifeInsMain.getId()), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
-            }
+//            } catch (Exception e) {
+//                insertMigrationLog(intToLong(unLifeInsMain.getId()), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
+//            }
         }
         return new CommonResult("保单迁移数据迁移成功");
     }
@@ -171,15 +175,15 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
         List<Integer> errorPolicy = migrationLogMapper.getErrorPolicy(intToLong(param.getChannelId()));
 
         for (Integer policyId : errorPolicy) {
-            try {
+//            try {
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
             UnLifeInsMain unLifeInsMain = unLifeInsMainMapper.getByPolicyId(policyId);
             if (ReflectUtil.isNotNull(unLifeInsMain)) {
                 saveNewPartner(unLifeInsMain, param);
             }
-            } catch (Exception e) {
-                insertMigrationLog(intToLong(policyId),MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(),param);
-            }
+//            } catch (Exception e) {
+//                insertMigrationLog(intToLong(policyId),MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(),param);
+//            }
         }
         return new CommonResult("错误迁移保单数据迁移成功");
     }
@@ -371,6 +375,16 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
             policy.setRemark(unLifeInsMain.getRemark());
             if (unLifeInsMain.getValDate() != null && !"".equals(unLifeInsMain.getValDate()) && unLifeInsMain.getValDate().length() == 10) {
                 policy.setDateStart(LocalDate.parse(unLifeInsMain.getValDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            }else if(unLifeInsMain.getValDate() != null && !"".equals(unLifeInsMain.getValDate()) && unLifeInsMain.getValDate().length() == 9){
+                String date=unLifeInsMain.getValDate();
+                date=date.substring(0,5)+"0"+date.substring(5,9);
+                policy.setDateStart(LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            }else if("None".equals(unLifeInsMain.getValDate())){
+                DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+                UnLifeInsState progress = unLifeInsStateMapper.getByPolicyIdAndProgress(unLifeInsMain.getId(), 2);
+                if(ReflectUtil.isNotNull(progress)){
+                    policy.setDateStart(DateUtil.convertTimeToLocalDate(intToLong(progress.getFileTime())).plusDays(1));
+                }
             }
 //            policy.setDateEnd();不处理
             if (unLifeInsMain.getExtendItems() != null &&
@@ -409,6 +423,7 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
             }
             lifePolicyStatus.setUpdateUser("{}");//默认为空
             lifePolicyStatus.setUpdateUserId(0L);//默认为空
+            DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             LifePolicyStatus status = lifePolicyStatusMapper.getByPolicyIdAndStatus(oldId, StatusEnum.getNewByCode(oldstate));
             if (ReflectUtil.isNull(status)) {
                 lifePolicyStatusMapper.insert(lifePolicyStatus);
@@ -500,7 +515,11 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                     }
 //                    policyProgress.setRemark("");//默认为空字符串
                     policyProgress.setUpdateUser("{}");//默认为空字符串
-                    policyProgress.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsState.getCreateTime())));
+                    if(unLifeInsState.getCreateTime()==0){
+                        policyProgress.setCreatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+                    }else {
+                        policyProgress.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsState.getCreateTime())));
+                    }
                     if (policyProgress.getProgress() != 0 && policyProgress.getProgress() == 15) {
                         policyProgress_15 = policyProgress;
                     }
@@ -513,7 +532,8 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
 //                    policyProgress.setUpdateUserId("");//默认为空字符串
                     if (progressNum != insStateList.size()) {
                         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-                        Integer num = lifePolicyProgressMapper.getCountById(intToLong(unLifeInsState.getId()));
+                        Integer num = lifePolicyProgressMapper.getCountByPolicyIdAndProgress(intToLong(unLifeInsState.getPolicyId()),ProgressEnum.getNewByCode(strToInteger(unLifeInsState.getProgress())));
+//                        Integer num = lifePolicyProgressMapper.getCountById(intToLong(unLifeInsState.getId()));
                         if (num == 0) {
                             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
                             lifePolicyProgressMapper.insert(policyProgress);
@@ -844,8 +864,24 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                 policy.setDateAdvance(policyProgress_12.getDate());
             }
             policy.setIsSaleSelf(0);//默认为否
-            policy.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getCreateTime())));
-            policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getModifyTime())));
+            /**
+             * 如果保单创建时间为0，则取承保日期前一天的时间
+             */
+            if(unLifeInsMain.getCreateTime()==0){
+                DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+                UnLifeInsState progress = unLifeInsStateMapper.getByPolicyIdAndProgress(unLifeInsMain.getId(), 2);
+                if(ReflectUtil.isNotNull(progress)){
+                    policy.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(progress.getFileTime())).plusDays(-1));
+                }
+            }else{
+                policy.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getCreateTime())));
+            }
+            if(unLifeInsMain.getModifyTime()==0){
+//                policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(1)));
+                policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+            }else {
+                policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getModifyTime())));
+            }
 //            policy.setServiceUserJson(userService.getServiceUserJson(new Long(unLifeInsMain.getUserId())));//默认出单人,json不处理
             policy.setImportWay(2);//默认为2
             policy.setSource(1);//默认为1
@@ -912,7 +948,8 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                 if (!"0".equals(unLifeInsMain.getRankId())) {
                     policy.setSalesUserRankId(Long.valueOf(unLifeInsMain.getRankId()));
                 }
-            }else if(param.getChannelId()==27){
+            }else if(param.getChannelId()==27 || param.getChannelId()==31 || param.getChannelId()==2 || param.getChannelId()==25){
+                DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
                 User user = userMapper.getById(intToLong(unLifeInsMain.getUserId()));
                 if(ReflectUtil.isNotNull(user)){
                     policy.setSalesUserOrgId(user.getOrgId());
@@ -1164,13 +1201,8 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
     }
 
     public static void main(String[] args) {
-        String str="{\"customer_notification\":\"\\/static\\/file\\/ins\\/custom\\/SZ23297068620190313095735.pdf\"}";
-        JSONObject jsonObject = JSONObject.parseObject(str);
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now.plusDays(-1));
 
-        String context = jsonObject.get("customer_notification").toString();
-        String s = context.substring(context.length() - 18, context.length() - 4);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-        LocalDateTime ldt = LocalDateTime.parse(s,dtf);
-        System.out.println(ldt);
     }
 }

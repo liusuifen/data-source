@@ -87,6 +87,7 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
 //                    insertMigrationLog(intToLong(unVideLearn.getId()), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(),param);
 //                }
             }
+            moveFavorite(param);
         }
         return new CommonResult("课程数据迁移完成！");
     }
@@ -95,7 +96,7 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
     public CommonResult getError(Param param) {
 
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
-        List<Integer> errorCourseList = migrationLogMapper.getErrorPolicy(intToLong(param.getChannelId()));
+        List<Integer> errorCourseList = migrationLogMapper.getErrorCourse(intToLong(param.getChannelId()));
         if(!CollectionUtils.isEmpty(errorCourseList)){
             for (Integer courseId : errorCourseList) {
                 UnVideoLearn unVideoLearn = unVideoLearnMapper.getById(courseId);
@@ -220,6 +221,9 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
         } else {
             log.info("新系统内容管理-课程信息表数据已存在，忽略！");
         }
+    }
+
+    public void moveFavorite(Param param){
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<UnVideoLearnCollect> unVideoLearnCollects = unVideoLearnCollectMapper.selectByChannelId(param.getChannelId());
         if(!CollectionUtils.isEmpty(unVideoLearnCollects)){
@@ -248,8 +252,6 @@ public class UnVideoLearnServiceImpl extends ServiceImpl<UnVideoLearnMapper, UnV
         }else {
             log.info("老系统课程用户收藏数据不存在，忽略！");
         }
-
-
     }
 
 

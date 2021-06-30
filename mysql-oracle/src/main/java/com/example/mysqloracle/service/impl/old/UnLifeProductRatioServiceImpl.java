@@ -74,13 +74,22 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
             DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             Long newsLifeProductId = getNewsLifeProductId(unLifeProductRatio.getProductId());
             Long orgId=intToLong(Integer.valueOf(unLifeProductRatio.getArea()));
+            DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
             LifeProductRatioTemplate lifeProductRatioTemplate = lifeProductRatioTemplateMapper.selectByProductId(newsLifeProductId,orgId);
             if(ReflectUtil.isNull(lifeProductRatioTemplate)){
                 lifeProductRatioTemplate=new LifeProductRatioTemplate();
                 lifeProductRatioTemplate.setLifeProductId(newsLifeProductId);
                 lifeProductRatioTemplate.setSystemUserId(intToLong(unLifeProductRatio.getCreateBy()));
-                lifeProductRatioTemplate.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getCreateTime())));
-                lifeProductRatioTemplate.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getModifyTime())));
+                if(unLifeProductRatio.getCreateTime()==0){
+                    lifeProductRatioTemplate.setCreatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+                }else {
+                    lifeProductRatioTemplate.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getCreateTime())));
+                }
+                if(unLifeProductRatio.getModifyTime()==0){
+                    lifeProductRatioTemplate.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+                }else{
+                    lifeProductRatioTemplate.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getModifyTime())));
+                }
                 lifeProductRatioTemplate.setOrgId(intToLong(Integer.valueOf(unLifeProductRatio.getArea())));
                 lifeProductRatioTemplate.setIsDeleted(0);
                 if(param.getChannelId()== PartnerEnum.channelId_佳兆业.getChannelId()){
@@ -95,7 +104,26 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
                     if(code!=null){
                         lifeProductRatioTemplate.setName("ZK_"+code+"_"+unLifeProductRatio.getArea());
                     }
+                }else if(param.getChannelId()== PartnerEnum.channelId_汇盟.getChannelId()){
+                    DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+                    String code = unLifeProductAllMapper.getCodeById(unLifeProductRatio.getProductId());
+                    if(code!=null){
+                        lifeProductRatioTemplate.setName("HM_"+code+"_"+unLifeProductRatio.getArea());
+                    }
+                }else if(param.getChannelId()== PartnerEnum.channelId_广商.getChannelId()){
+                    DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+                    String code = unLifeProductAllMapper.getCodeById(unLifeProductRatio.getProductId());
+                    if(code!=null){
+                        lifeProductRatioTemplate.setName("GDGS_"+code+"_"+unLifeProductRatio.getArea());
+                    }
+                }else if(param.getChannelId()== PartnerEnum.channelId_大同.getChannelId()){
+                    DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+                    String code = unLifeProductAllMapper.getCodeById(unLifeProductRatio.getProductId());
+                    if(code!=null){
+                        lifeProductRatioTemplate.setName("DT_"+code+"_"+unLifeProductRatio.getArea());
+                    }
                 }
+
                 DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
                 lifeProductRatioTemplateMapper.insert(lifeProductRatioTemplate);
                 log.info("该模板数据数据生成成功，模板id:{}",lifeProductRatioTemplate.getId());
@@ -145,8 +173,16 @@ public class UnLifeProductRatioServiceImpl extends ServiceImpl<UnLifeProductRati
             lifeProductRatioTemplateDetail.setRatio(unLifeProductRatio.getRatio());
             lifeProductRatioTemplateDetail.setRemark(unLifeProductRatio.getRemark());
             lifeProductRatioTemplateDetail.setSystemUserId(unLifeProductRatio.getCreateBy());
-            lifeProductRatioTemplateDetail.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getCreateTime())));
-            lifeProductRatioTemplateDetail.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getModifyTime())));
+            if(unLifeProductRatio.getCreateTime()==0){
+                lifeProductRatioTemplateDetail.setCreatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+            }else{
+                lifeProductRatioTemplateDetail.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getCreateTime())));
+            }
+            if(unLifeProductRatio.getModifyTime()==0){
+                lifeProductRatioTemplateDetail.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+            }else{
+                lifeProductRatioTemplateDetail.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeProductRatio.getModifyTime())));
+            }
             lifeProductRatioTemplateDetail.setIsDeleted(0);//默认值
             lifeProductRatioTemplateDetail.setSourceWay(1);
             lifeProductRatioTemplateDetail.setTemplateId(getTemplate(newsLifeProductId,orgId));

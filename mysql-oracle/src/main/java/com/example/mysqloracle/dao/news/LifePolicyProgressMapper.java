@@ -34,11 +34,15 @@ public interface LifePolicyProgressMapper extends BaseMapper<LifePolicyProgress>
 
     @Select("select id, life_policy_id as lifePolicyId, progress, result, date, file, remark, update_user as updateUser, " +
             "created_at as createdAt, update_user_id as updateUserId " +
-            "from life_policy_progress where life_policy_id=#{lifePolicyId} and progress=#{progress}")
+            "from life_policy_progress where life_policy_id=#{lifePolicyId} and progress=#{progress} ORDER BY id desc limit 1")
     LifePolicyProgress selectByPolicyIdAndProcess(@Param("lifePolicyId") Long lifePolicyId,@Param("progress") Integer progress);
 
 
     @Select("select count(*) from life_policy_progress where  LENGTH(life_policy_id)=5; ")
     Integer selectByChannelId();
+
+
+    @Select("select count(*) from life_policy_progress where life_policy_id=#{lifePolicyId} and progress=#{progress}")
+    Integer getCountByPolicyIdAndProgress(@Param("lifePolicyId") Long lifePolicyId,@Param("progress") Integer progress);
 
 }

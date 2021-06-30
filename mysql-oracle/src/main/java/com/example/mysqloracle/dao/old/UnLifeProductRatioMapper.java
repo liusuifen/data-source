@@ -43,7 +43,7 @@ public interface UnLifeProductRatioMapper extends BaseMapper<UnLifeProductRatio>
             "\tWHERE\n" +
             "\t\tchannel_id = 27 \n" +
             "\t\tAND id IN ( SELECT area FROM `un_life_product_ratio` WHERE channel_id = 27 GROUP BY area ) \n" +
-            "\t\tAND delete_time IS NOT NULL \n" +
+            "\t\tAND delete_time IS NOT NULL or id =107 \n" +
             "\t) " +
             "and delete_time is null")
     List<UnLifeProductRatio> getByChannelId2(@Param("channelId") Integer channleId);

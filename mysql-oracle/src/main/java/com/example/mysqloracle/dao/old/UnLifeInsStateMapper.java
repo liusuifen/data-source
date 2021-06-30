@@ -31,4 +31,13 @@ public interface UnLifeInsStateMapper extends BaseMapper<UnLifeInsState> {
 
     @Select("select count(*) from un_life_ins_state where policy_id in (select id from un_life_ins_main where channel_id=#{channelId} and is_first=1 and delete_time is null) and delete_time is null;")
     Integer selectByChannelId(@Param("channelId") Integer channelId);
+
+
+    @Select("select id, channel_id as channelId, policy_id as policyId, progress, picture, " +
+            "file_time as fileTime, create_by as createBy, create_time as createTime, " +
+            "modify_by as modifyBy, modify_time as modifyTime, wp_id as wpId, delete_time as deleteTime from un_life_ins_state " +
+            "where policy_id=#{policyId} " +
+            "and progress=#{progress} " +
+            "and delete_time is null order by file_time DESC limit 1")
+    UnLifeInsState getByPolicyIdAndProgress(@Param("policyId") Integer policyId, @Param("progress")Integer progress);
 }

@@ -28,4 +28,9 @@ public interface ContentCourseTypeMapper extends BaseMapper<ContentCourseType> {
     @Select("select id from content_course_type where name=#{name}")
     Integer getByCategoryName(@Param("name") String name);
 
+
+
+    @Select("select sort from content_course_type where is_deleted=0 order by sort desc limit 1")
+    Integer getSort();
+
 }
