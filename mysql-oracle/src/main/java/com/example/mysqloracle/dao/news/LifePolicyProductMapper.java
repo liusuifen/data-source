@@ -35,6 +35,6 @@ public interface LifePolicyProductMapper extends BaseMapper<LifePolicyProduct> {
     List<LifePolicyProduct> selectByPolicyId(@Param("lifePolicyId") Long lifePolicyId);
 
 
-    @Select("select count(*) from life_policy_product where  LENGTH(life_policy_id)=5; ")
+    @Select("select count(*) from life_policy_product where  LENGTH(life_policy_id)<=5; ")
     Integer selectByChannelId();
 }

@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * <p>
  * 寿险保单-投保单主表 Mapper 接口
@@ -41,8 +43,11 @@ public interface LifePolicyMapper extends BaseMapper<LifePolicy> {
             "from life_policy where id=#{id}")
     LifePolicy getByIds(@Param("id") Long id);
 
+    @Select("select id from life_policy where source_partner_id=0 and LENGTH(id)<=5")
+    List<Integer>  getPolicyCount();
 
-    @Select("select count(*) from life_policy where source_partner_id=0 and LENGTH(id)=5; ")
+
+    @Select("select count(*) from life_policy where source_partner_id=0 and LENGTH(id)<=5; ")
     Integer selectByChannelId();
 
     @Select("select aa.* from (\n" +

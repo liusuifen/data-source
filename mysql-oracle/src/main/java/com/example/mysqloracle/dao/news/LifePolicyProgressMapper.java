@@ -38,7 +38,7 @@ public interface LifePolicyProgressMapper extends BaseMapper<LifePolicyProgress>
     LifePolicyProgress selectByPolicyIdAndProcess(@Param("lifePolicyId") Long lifePolicyId,@Param("progress") Integer progress);
 
 
-    @Select("select count(*) from life_policy_progress where  LENGTH(life_policy_id)=5; ")
+    @Select("select count(*) from life_policy_progress where  LENGTH(life_policy_id)<=5; ")
     Integer selectByChannelId();
 
 

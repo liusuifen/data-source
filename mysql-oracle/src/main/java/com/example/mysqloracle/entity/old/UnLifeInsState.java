@@ -42,7 +42,7 @@ public class UnLifeInsState implements Serializable {
     private String picture;
     @ApiModelProperty(value = "文件时间")
     @TableField("file_time")
-    private Integer fileTime;
+    private Long fileTime;
     @ApiModelProperty(value = "创建者")
     @TableField("create_by")
     private Integer createBy;

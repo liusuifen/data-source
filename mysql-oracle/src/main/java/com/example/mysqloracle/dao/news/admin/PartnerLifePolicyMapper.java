@@ -22,7 +22,7 @@ public interface PartnerLifePolicyMapper extends BaseMapper<PartnerLifePolicy> {
     Integer getCount(@Param("id") Long id);
 
 
-    @Select("select count(*) from partner_life_policy where partner_id=#{partnerId} and LENGTH(id)=5;  ")
+    @Select("select count(*) from partner_life_policy where partner_id=#{partnerId} and LENGTH(id)<=5;  ")
     Integer selectByChannelId(@Param("partnerId") Long partnerId);
 
 }

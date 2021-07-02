@@ -43,8 +43,17 @@ public interface UnLifeInsMainMapper extends BaseMapper<UnLifeInsMain> {
             "and is_first=1 " +
             "and delete_time is null " +
             "and create_time>=#{startDate} " +
-            "and create_time<#{endDate}")
+            "and create_time<#{endDate} and id not in (select id from un_life_ins_main where  channel_id=#{channelId} and delete_time is null and is_first=1 and id not in (SELECT policy_id FROM `un_life_ins_content` where is_main=1))")
     List<UnLifeInsMain> getAll(@Param("channelId") Integer channelId, @Param("startDate") Integer startDate, @Param("endDate") Integer endDate);
+
+
+    @Select("select id from un_life_ins_main where 1=1 " +
+            "and channel_id=#{channelId} " +
+            "and is_first=1 " +
+            "and delete_time is null " +
+            "and create_time>=#{startDate} " +
+            "and create_time<#{endDate} and id not in (select id from un_life_ins_main where  channel_id=#{channelId} and delete_time is null and is_first=1 and id not in (SELECT policy_id FROM `un_life_ins_content` where is_main=1))")
+    List<Integer> getAllCount(@Param("channelId") Integer channelId, @Param("startDate") Integer startDate, @Param("endDate") Integer endDate);
 
     @Select("select id, channel_id as channelId, order_no as channelId, policy_no as policyNo, policy_sn as policySn, " +
             "uw_medical_id as uwMedicalId, supplier_id as supplierId, sales_channel as salesChannel, sales_dept as salesDept, " +
@@ -100,7 +109,7 @@ public interface UnLifeInsMainMapper extends BaseMapper<UnLifeInsMain> {
     @Select("SELECT extend_items FROM `un_life_ins_main` where extend_items like '%isTaxResidents%' and is_first=1 and delete_time is null")
     List<String> getExtendItems();
 
-    @Select("select count(*) from un_life_ins_main where channel_id=#{channelId} and is_first=1 and delete_time is null ;")
+    @Select("select count(*) from un_life_ins_main where channel_id=#{channelId} and is_first=1 and delete_time is null and id not in (select id from un_life_ins_main where  channel_id=#{channelId} and delete_time is null and is_first=1 and id not in (SELECT policy_id FROM `un_life_ins_content` where is_main=1))")
     Integer selectByChannelId(@Param("channelId") Integer channelId);
 
 }

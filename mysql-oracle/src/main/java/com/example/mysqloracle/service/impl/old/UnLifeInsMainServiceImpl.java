@@ -160,11 +160,11 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
         List<UnLifeInsMain> all=unLifeInsMainMapper.getAll(param.getChannelId(), DateUtil.strToInteger(param.getStartDate()), DateUtil.strToInteger(param.getEndDate()));
         for (UnLifeInsMain unLifeInsMain : all) {
-//            try {
+            try {
                 saveNewPartner(unLifeInsMain, param);
-//            } catch (Exception e) {
-//                insertMigrationLog(intToLong(unLifeInsMain.getId()), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
-//            }
+            } catch (Exception e) {
+                insertMigrationLog(intToLong(unLifeInsMain.getId()), MigrationStatusEnum.MIGRATION_STATUS_FAIL.getCode(), param);
+            }
         }
         return new CommonResult("保单迁移数据迁移成功");
     }
@@ -351,6 +351,10 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
      * 枚举需要特殊处理
      */
     public void saveNewPartner(UnLifeInsMain unLifeInsMain, Param param) {
+
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+        UnLifeInsState progress = unLifeInsStateMapper.getByPolicyIdAndProgress(unLifeInsMain.getId(), 2);
+
         Long oldId = intToLong(unLifeInsMain.getId());
         DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
         LifePolicy lifePolicy = lifePolicyService.getById(oldId);
@@ -379,11 +383,9 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                 String date=unLifeInsMain.getValDate();
                 date=date.substring(0,5)+"0"+date.substring(5,9);
                 policy.setDateStart(LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            }else if("None".equals(unLifeInsMain.getValDate())){
-                DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
-                UnLifeInsState progress = unLifeInsStateMapper.getByPolicyIdAndProgress(unLifeInsMain.getId(), 2);
-                if(ReflectUtil.isNotNull(progress)){
-                    policy.setDateStart(DateUtil.convertTimeToLocalDate(intToLong(progress.getFileTime())).plusDays(1));
+            }else{
+                if(ReflectUtil.isNotNull(progress)&&progress.getFileTime()!=0){
+                    policy.setDateStart(DateUtil.convertTimeToLocalDate(progress.getFileTime()).plusDays(1));
                 }
             }
 //            policy.setDateEnd();不处理
@@ -419,7 +421,12 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                 lifePolicyStatus.setDate(DateUtil.convertTimeToLocalDate(intToLong(unLifeInsMain.getModifyTime())));
             }
             if (lifePolicyStatus.getDate() != null && !"".equals(lifePolicyStatus.getDate())) {
-                lifePolicyStatus.setCreatedAt(DateUtil.localDateToLocalDateTime(lifePolicyStatus.getDate()));
+                if(lifePolicyStatus.getDate().isEqual(DateUtil.strToLocalDate("1970-01-01"))){
+
+                }else {
+                    lifePolicyStatus.setCreatedAt(DateUtil.localDateToLocalDateTime(lifePolicyStatus.getDate()));
+                }
+
             }
             lifePolicyStatus.setUpdateUser("{}");//默认为空
             lifePolicyStatus.setUpdateUserId(0L);//默认为空
@@ -488,7 +495,7 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                     policyProgress.setLifePolicyId(intToLong(unLifeInsState.getPolicyId()));
                     policyProgress.setProgress(ProgressEnum.getNewByCode(strToInteger(unLifeInsState.getProgress())));
                     policyProgress.setResult(1);//默认成功
-                    policyProgress.setDate(DateUtil.convertTimeToLocalDate(intToLong(unLifeInsState.getFileTime())));
+                    policyProgress.setDate(DateUtil.convertTimeToLocalDate(unLifeInsState.getFileTime()));
                     String oldPicture = unLifeInsState.getPicture();
                     String value = ProPertiesUtil.getValue("C:\\Users\\bl007\\IdeaProjects\\data-source\\mysql-oracle\\src\\main\\resources\\application.properties", "oss.url");
                     if (oldPicture != null && !"".equals(oldPicture)) {
@@ -516,7 +523,14 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
 //                    policyProgress.setRemark("");//默认为空字符串
                     policyProgress.setUpdateUser("{}");//默认为空字符串
                     if(unLifeInsState.getCreateTime()==0){
-                        policyProgress.setCreatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+                        /**
+                         * 如果创建时间为0,则取该保单得承保得日期，再则取默认时间:2019-01-01 00:00:00
+                         */
+                        if(progress!=null&&progress.getFileTime()!=0){
+                            policyProgress.setCreatedAt(DateUtil.convertTimeToLocalDateTime(progress.getFileTime()));
+                        }else {
+                            policyProgress.setCreatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+                        }
                     }else {
                         policyProgress.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsState.getCreateTime())));
                     }
@@ -675,14 +689,20 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                                 lifePolicyProduct.setSafeYearUnit(1);//年
                             }
                         }
-                        lifePolicyProduct.setPayYear(unLifeInsContent.getPeriodPayment());
-                        if (unLifeInsContent.getPeriodPayment() != null) {
-                            if (unLifeInsContent.getPeriodPayment() >= 50) {
-                                lifePolicyProduct.setPayYearUnit(2);//岁
-                            } else {
-                                lifePolicyProduct.setPayYearUnit(1);//年
+                        if(unLifeInsContent.getPeriodPayment()>100){
+                            lifePolicyProduct.setPayYear(1);
+                            lifePolicyProduct.setPayYearUnit(1);//年
+                        }else {
+                            lifePolicyProduct.setPayYear(unLifeInsContent.getPeriodPayment());
+                            if (unLifeInsContent.getPeriodPayment() != null) {
+                                if (unLifeInsContent.getPeriodPayment() >= 50) {
+                                    lifePolicyProduct.setPayYearUnit(2);//岁
+                                } else {
+                                    lifePolicyProduct.setPayYearUnit(1);//年
+                                }
                             }
                         }
+
                         //缴费期间1填1，其他情况填2
                         if (unLifeInsContent.getPeriodPayment() == 1) {
                             lifePolicyProduct.setPayWay(1);
@@ -748,7 +768,9 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                         if (beneficiary.getIdExpireEnd() != null &&
                                 !"".equals(beneficiary.getIdExpireEnd()) &&
                                 beneficiary.getIdExpireEnd().length() == 10) {
-                            lifePolicyBeneficiary.setIdExpiredDate(DateUtil.strToLocalDate(beneficiary.getIdExpireEnd()));
+                            if(!beneficiary.getIdExpireEnd().equals("0000-00-00")){
+                                lifePolicyBeneficiary.setIdExpiredDate(DateUtil.strToLocalDate(beneficiary.getIdExpireEnd()));
+                            }
                         }
 //                    lifePolicyBeneficiary.setEmail();//默认为空
                         lifePolicyBeneficiary.setMobile(beneficiary.getTel());
@@ -800,7 +822,9 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                         if (unLifeInsInsured.getInsuredBirthday() != null &&
                                 !"".equals(unLifeInsInsured.getInsuredBirthday()) &&
                                 unLifeInsInsured.getInsuredBirthday().length() == 10) {
-                            lifePolicyInsured.setBirthday(DateUtil.strToLocalDate(unLifeInsInsured.getInsuredBirthday()));
+                            if(!unLifeInsInsured.getInsuredBirthday().equals("0000-11-30")){
+                                lifePolicyInsured.setBirthday(DateUtil.strToLocalDate(unLifeInsInsured.getInsuredBirthday()));
+                            }
                         }
                         lifePolicyInsured.setRelation(strToInteger(basicEnumService.getNewEnum(unLifeInsInsured.getRelInsuredHolder())));
                         lifePolicyInsured.setRelationName(RelationEnum.getNameByCode(lifePolicyInsured.getRelation()));
@@ -810,7 +834,11 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
                         if (unLifeInsInsured.getInsuredIdExpireEnd() != null &&
                                 !"".equals(unLifeInsInsured.getInsuredIdExpireEnd()) &&
                                 unLifeInsInsured.getInsuredIdExpireEnd().length() == 10) {
-                            lifePolicyInsured.setIdExpiredDate(DateUtil.strToLocalDate(unLifeInsInsured.getInsuredIdExpireEnd()));
+                            if(unLifeInsInsured.getInsuredIdExpireEnd().equals("0000-00-00")){
+//                                lifePolicyInsured.setIdExpiredDate(DateUtil.strToLocalDate("9999-12-31"));
+                            }else {
+                                lifePolicyInsured.setIdExpiredDate(DateUtil.strToLocalDate(unLifeInsInsured.getInsuredIdExpireEnd()));
+                            }
                         }
                         lifePolicyInsured.setHeight(unLifeInsInsured.getInsuredHeight().intValue());
                         lifePolicyInsured.setWeight(unLifeInsInsured.getInsuredWeight());
@@ -868,17 +896,27 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
              * 如果保单创建时间为0，则取承保日期前一天的时间
              */
             if(unLifeInsMain.getCreateTime()==0){
-                DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
-                UnLifeInsState progress = unLifeInsStateMapper.getByPolicyIdAndProgress(unLifeInsMain.getId(), 2);
-                if(ReflectUtil.isNotNull(progress)){
-                    policy.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(progress.getFileTime())).plusDays(-1));
+
+                /**
+                 * 如果创建时间为0,则取该保单得承保得日期，再则取默认时间:2019-01-01 00:00:00
+                 */
+                if(progress!=null&&progress.getFileTime()!=0){
+                    policy.setCreatedAt(DateUtil.convertTimeToLocalDateTime(progress.getFileTime()).plusDays(-1));
+                }else {
+                    policy.setCreatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
                 }
             }else{
                 policy.setCreatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getCreateTime())));
             }
             if(unLifeInsMain.getModifyTime()==0){
-//                policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(1)));
-                policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+                /**
+                 * 如果创建时间为0,则取该保单得承保得日期，再则取默认时间:2019-01-01 00:00:00
+                 */
+                if(progress!=null&&progress.getFileTime()!=0){
+                    policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(progress.getFileTime()));
+                }else {
+                    policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(1546272000L));
+                }
             }else {
                 policy.setUpdatedAt(DateUtil.convertTimeToLocalDateTime(intToLong(unLifeInsMain.getModifyTime())));
             }
@@ -1017,14 +1055,21 @@ public class UnLifeInsMainServiceImpl extends ServiceImpl<UnLifeInsMainMapper, U
 
                 }
                 if (unLifeInsMain.getHolderBirthday() != null && !"".equals(unLifeInsMain.getHolderBirthday()) && unLifeInsMain.getHolderBirthday().length() == 10) {
-                    lifePolicyHolder.setBirthday(LocalDate.parse(unLifeInsMain.getHolderBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                   if(unLifeInsMain.getHolderBirthday().equals("0000-00-00")||unLifeInsMain.getHolderBirthday().equals("0000-11-30")){
+
+                   }else {
+                       lifePolicyHolder.setBirthday(LocalDate.parse(unLifeInsMain.getHolderBirthday(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                   }
                 }
                 lifePolicyHolder.setNationality(strToInteger(basicEnumService.getNewEnum(unLifeInsMain.getHolderNation())));
                 lifePolicyHolder.setIdType(strToInteger(basicEnumService.getNewEnum(unLifeInsMain.getHolderIdType())));//枚举关系
                 lifePolicyHolder.setIdNo(unLifeInsMain.getHolderIdNo());
                 lifePolicyHolder.setIdConcat(lifePolicyHolder.getIdType() + lifePolicyHolder.getIdNo());
                 if (unLifeInsMain.getHolderIdExpireEnd() != null && !"".equals(unLifeInsMain.getHolderIdExpireEnd()) && unLifeInsMain.getHolderIdExpireEnd().length() == 10) {
-                    lifePolicyHolder.setIdExpiredDate(LocalDate.parse(unLifeInsMain.getHolderIdExpireEnd(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    if(unLifeInsMain.getHolderIdExpireEnd().equals("0000-00-00")){
+                    }else {
+                        lifePolicyHolder.setIdExpiredDate(LocalDate.parse(unLifeInsMain.getHolderIdExpireEnd(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    }
                 }
 
                 lifePolicyHolder.setMarriage(strToInteger(basicEnumService.getNewEnum(unLifeInsMain.getHolderMarriage())));

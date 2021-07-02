@@ -24,7 +24,7 @@ public interface PartnerLifePolicyProgressMapper extends BaseMapper<PartnerLifeP
 
 
 
-    @Select("select count(*) from partner_life_policy_progress where life_policy_id in (select id from partner_life_policy where partner_id=#{partnerId} and LENGTH(id)=5)")
+    @Select("select count(*) from partner_life_policy_progress where life_policy_id in (select id from partner_life_policy where partner_id=#{partnerId} and LENGTH(id)<=5)")
     Integer selectByChannelId(@Param("partnerId") Long partnerId);
 
 }

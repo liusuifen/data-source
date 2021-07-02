@@ -11,6 +11,7 @@ import com.example.mysqloracle.datasource.DataSourceContextHolder;
 import com.example.mysqloracle.entity.news.admin.PartnerLifePolicy;
 import com.example.mysqloracle.enums.PartnerEnum;
 import com.example.mysqloracle.param.Param;
+import com.example.mysqloracle.util.DateUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,6 +224,17 @@ public class CheckController {
         map.put("合作方"+param.getChannelId()+"-新系统环境保联【partner_life_policy_product】文档表总数",adminDocumentNum);
 
         log.info("文档数量：新系统合作方:{},新系统保联:{}",newDocumentNum,adminDocumentNum);
+
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.PRIMARY.toString());
+        List<Integer> oldPolicy = unLifeInsMainMapper.getAllCount(param.getChannelId(), DateUtil.strToInteger(param.getStartDate()),DateUtil.strToInteger(param.getEndDate()));
+
+        DataSourceContextHolder.setDataSource(ContextConst.DataSourceType.SUB.toString());
+        List<Integer> newPolicy = lifePolicyMapper.getPolicyCount();
+
+        List<Integer> policy=new ArrayList<>();
+        policy.addAll(oldPolicy);
+        policy.removeAll(newPolicy);
+        log.info("没有从老系统迁移过来的保单：{}",policy);
         return new CommonResult(map);
     }
 
